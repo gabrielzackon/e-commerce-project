@@ -35,21 +35,11 @@ header a {
 }
 
 .product img {
-  width: 200px;
-  height: 300px;
-  object-fit: cover;
-}
-
-.product-image {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  max-height: 300px;
 }
 
 .product-info {
   padding: 1rem;
-}
-
-.product-name {
-  font-weight: bold;
 }
