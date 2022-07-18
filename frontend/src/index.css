@@ -25,22 +25,10 @@ main {
   justify-content: center;
 }
 
-/* .product {
-  border: 1px #404040 solid;
-  margin: 1rem;
-  max-width: 300px;
-} */
-
-/* .product img {
-  width: 100%;
-  max-width: 400px;
-  max-height: 300px;
-} */
-
 .product-info {
   padding: 1rem;
 }
 
-img {
-  max-height: 250px;
+img-large {
+  max-width: 100%;
 }

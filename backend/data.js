@@ -30,7 +30,7 @@ const data = {
       category: 'La Liga',
       image: '/images/barcelona-home.png', // 679px × 829px
       price: 110,
-      countInStock: 10,
+      countInStock: 0,
       brand: 'Nike',
       rating: 4,
       numReviews: 10,
