@@ -1,6 +1,7 @@
 const data = {
   products: [
     {
+      _id: '1',
       name: 'Manchester United Home kit 2022/2023',
       slug: 'man-utd-home-kit-22-23',
       category: 'Premier League',
@@ -13,6 +14,7 @@ const data = {
       description: 'Manchester United Home kit 2022/2023',
     },
     {
+      _id: '2',
       name: 'Manchester United Away kit 2022/2023',
       slug: 'man-utd-away-kit-22-23',
       category: 'Premier League',
@@ -25,6 +27,7 @@ const data = {
       description: 'Manchester United Away kit 2022/2023',
     },
     {
+      _id: '3',
       name: 'FC Barcelona Home kit 2022/2023',
       slug: 'fc-barcelona-home-kit-22-23',
       category: 'La Liga',
@@ -37,6 +40,7 @@ const data = {
       description: 'FC Barcelona Home kit 2022/2023',
     },
     {
+      _id: '4',
       name: 'FC Barcelona Away kit 2022/2023',
       slug: 'fc-barcelona-away-kit-22-23',
       category: 'La Liga',
