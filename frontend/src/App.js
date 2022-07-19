@@ -10,6 +10,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { Store } from './Store';
+import CartPage from './pages/CartPage';
 
 function App() {
   const { state } = useContext(Store);
@@ -22,7 +23,7 @@ function App() {
           <Navbar bg="dark" variant="dark">
             <Container>
               <LinkContainer to="/">
-                <Navbar.Brand>Football Shirts</Navbar.Brand>
+                <Navbar.Brand>Shirt In A Box</Navbar.Brand>
               </LinkContainer>
               <Nav className="me-auto">
                 <Link to="/cart" className="nav-link">
@@ -41,6 +42,7 @@ function App() {
           <Container className="mt-3">
             <Routes>
               <Route path="/product/:slug" element={<ProductPage />} />
+              <Route path="/cart" element={<CartPage />} />
               <Route path="/" element={<HomePage />} />
             </Routes>
           </Container>
