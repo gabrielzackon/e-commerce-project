@@ -7,7 +7,7 @@ const data = {
       category: 'Premier League',
       image: '/images/man-utd-home.png', // 600 X 600 pixels
       price: 120,
-      countInStock: 10,
+      countInStock: 15,
       brand: 'Adidas',
       rating: 3.5,
       numReviews: 10,
