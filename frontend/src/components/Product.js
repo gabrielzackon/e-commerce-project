@@ -1,18 +1,20 @@
 import React, { useContext } from 'react';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Rating from './Rating';
 import axios from 'axios';
 import { Store } from '../Store';
 
 function Product(props) {
+  const navigate = useNavigate();
   const { product } = props;
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
     cart: { cartItems },
   } = state;
-  const AddToCartHandler = async (item) => {
+  const addToCartHandler = async (item) => {
+    navigate('/login');
     const existItem = cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${item._id}`);
@@ -44,7 +46,7 @@ function Product(props) {
             Out of Stock
           </Button>
         ) : (
-          <Button onClick={() => AddToCartHandler(product)}>Add to cart</Button>
+          <Button onClick={() => addToCartHandler(product)}>Add to cart</Button>
         )}
       </Card.Body>
     </Card>
