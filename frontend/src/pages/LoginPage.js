@@ -9,6 +9,9 @@ import { Store } from '../Store';
 import { getError } from '../utils';
 
 export default function LoginPage() {
+  const THIRTY_MINS_IN_MS = 30 * 60 * 1000;
+  const TEN_DAYS_IN_MS = 10 * 24 * 60 * 60 * 1000;
+
   const navigate = useNavigate();
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
@@ -17,8 +20,14 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { userInfo } = state;
+  const { dispatch: ctxDispatch } = useContext(Store);
+
+  const userInfoObj = JSON.parse(localStorage.getItem('userInfo'));
+  const userInfo =
+    userInfoObj && userInfoObj['expiry'] <= new Date().getTime()
+      ? userInfoObj
+      : null;
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -27,6 +36,11 @@ export default function LoginPage() {
         password,
       });
       ctxDispatch({ type: 'USER_LOGIN', payload: data });
+      const now = new Date();
+      const ttl = document.getElementById('remember-me').checked
+        ? TEN_DAYS_IN_MS
+        : THIRTY_MINS_IN_MS;
+      data['expiry'] = now.getTime() + ttl;
       localStorage.setItem('userInfo', JSON.stringify(data));
       navigate(redirect || '/');
     } catch (err) {
@@ -63,6 +77,12 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
+        <div>
+          <label>
+            <input type="checkbox" id="remember-me" />
+            Remember Me!
+          </label>
+        </div>
         <div className="mb-3">
           <Button type="submit">Log In</Button>
         </div>

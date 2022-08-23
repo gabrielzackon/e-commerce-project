@@ -23,10 +23,14 @@ function App() {
 
   const logoutHandler = () => {
     ctxDispatch({ type: 'USER_LOGOUT' });
-    localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentInfo');
   };
+
+  const loginHandler = () => {
+    const userInfo = ctxDispatch({ type: 'USER_LOGIN' });
+  };
+
   return (
     <BrowserRouter>
       <div className="d-flex flex-column site-container">
@@ -56,14 +60,14 @@ function App() {
                     <NavDropdown.Divider />
                     <Link
                       className="dropdown-item"
-                      to="#logout"
+                      to="/"
                       onClick={logoutHandler}
                     >
                       Log Out
                     </Link>
                   </NavDropdown>
                 ) : (
-                  <Link className="nav-link" to="/login">
+                  <Link className="nav-link" to="/login" onClick={loginHandler}>
                     Log In
                   </Link>
                 )}
