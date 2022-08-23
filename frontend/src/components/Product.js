@@ -14,20 +14,23 @@ function Product(props) {
     cart: { cartItems },
   } = state;
   const addToCartHandler = async (item) => {
-    navigate('/login');
-    const existItem = cartItems.find((x) => x._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${item._id}`);
+    if (!localStorage.getItem('userInfo')) {
+      navigate(`/login`);
+    } else {
+      const existItem = cartItems.find((x) => x._id === product._id);
+      const quantity = existItem ? existItem.quantity + 1 : 1;
+      const { data } = await axios.get(`/api/products/${item._id}`);
 
-    if (data.countInStock < quantity) {
-      window.alert('Product out of stock');
-      return;
+      if (data.countInStock < quantity) {
+        window.alert('Product out of stock');
+        return;
+      }
+
+      ctxDispatch({
+        type: 'CART_ADD_ITEM',
+        payload: { ...item, quantity },
+      });
     }
-
-    ctxDispatch({
-      type: 'CART_ADD_ITEM',
-      payload: { ...item, quantity },
-    });
   };
 
   return (

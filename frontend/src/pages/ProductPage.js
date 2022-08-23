@@ -31,6 +31,9 @@ function ProductPage() {
   const navigate = useNavigate();
   const params = useParams();
   const { slug } = params;
+  if (!localStorage.getItem('userInfo')) {
+    navigate(`/login?redirect=/product/${slug}`);
+  }
   const [{ loading, error, product }, dispatch] = useReducer(reducer, {
     product: [],
     loading: true,

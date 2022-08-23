@@ -28,7 +28,7 @@ function App() {
   };
 
   const loginHandler = () => {
-    const userInfo = ctxDispatch({ type: 'USER_LOGIN' });
+    ctxDispatch({ type: 'USER_LOGIN' });
   };
 
   return (
