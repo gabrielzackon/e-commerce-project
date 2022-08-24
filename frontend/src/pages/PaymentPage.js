@@ -14,8 +14,7 @@ export default function PaymentPage() {
 
   const [cardNumber, setCardNumber] = useState(paymentInfo.cardNumber || '');
   const [billingZip, setBillingZip] = useState(paymentInfo.billingZip || '');
-  const [expiryMonth, setExpiryMonth] = useState(paymentInfo.expiryMonth || '');
-  const [expiryYear, setExpiryYear] = useState(paymentInfo.expiryYear || '');
+  const [expiryDate, setExpiryDate] = useState(paymentInfo.expiryDate || '');
 
   useEffect(() => {
     if (!shippingAddress.address) {
@@ -30,8 +29,7 @@ export default function PaymentPage() {
       payload: {
         cardNumber,
         billingZip,
-        expiryMonth,
-        expiryYear,
+        expiryDate,
       },
     });
     localStorage.setItem(
@@ -39,8 +37,7 @@ export default function PaymentPage() {
       JSON.stringify({
         cardNumber,
         billingZip,
-        expiryMonth,
-        expiryYear,
+        expiryDate,
       })
     );
     navigate('/placeorder');
@@ -71,20 +68,13 @@ export default function PaymentPage() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="month">
-            <Form.Label>Expiry Month</Form.Label>
+            <Form.Label>Expiry Date</Form.Label>
             <Form.Control
               type="month"
+              min="2022-09"
               required
-              onChange={(e) => setExpiryMonth(e.target.value)}
+              onChange={(e) => setExpiryDate(e.target.value)}
             />
-            <Form.Group className="mb-3" controlId="year">
-              <Form.Label>Expiry Year</Form.Label>
-              <Form.Control
-                type="year"
-                onChange={(e) => setExpiryYear(e.target.value)}
-                required
-              />
-            </Form.Group>
           </Form.Group>
         </Form>
       </div>
