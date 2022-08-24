@@ -42,6 +42,29 @@ export default function CartPage() {
     navigate('/shipping');
   };
 
+  const updateSubtotal = () => {
+    const checkedProducts = document.querySelectorAll(
+      'input[type="checkbox"]:checked'
+    );
+    let productsList = [];
+    checkedProducts.forEach((product) => {
+      productsList.push(product['id']);
+    });
+    const numberOfProducts = checkedProducts.length;
+    const filteredProducts = cartItems.filter((item) =>
+      productsList.includes(item['slug'])
+    );
+
+    let totalPrice = filteredProducts.reduce((total, product) => {
+      const productQuantity = document.getElementById(product['slug'])
+        .textContent;
+      return total + product['price'] * productQuantity;
+    }, 0);
+    document.getElementById(
+      'subtotal'
+    ).textContent = `Subtotal (${numberOfProducts} items): ${totalPrice}$`;
+  };
+
   useEffect(() => {
     if (
       !localStorage.getItem('userInfo') ||
@@ -86,7 +109,7 @@ export default function CartPage() {
                       >
                         <i className="fas fa-minus-circle"></i>
                       </Button>{' '}
-                      <span>{item.quantity}</span>{' '}
+                      <span id={item.slug}>{item.quantity}</span>{' '}
                       <Button
                         variant="light"
                         onClick={() =>
@@ -108,7 +131,11 @@ export default function CartPage() {
                     </Col>
                     <Col md={1}>
                       <div>
-                        <input type="checkbox" id="remember-me" />
+                        <input
+                          type="checkbox"
+                          id={item.slug}
+                          onChange={updateSubtotal}
+                        />
                       </div>
                     </Col>
                   </Row>
@@ -122,11 +149,7 @@ export default function CartPage() {
             <Card.Body>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <h3>
-                    Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
-                    items) : $
-                    {cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
-                  </h3>
+                  <h3 id="subtotal">Subtotal (0 items): 0$</h3>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <div className="d-grid">
