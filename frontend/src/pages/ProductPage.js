@@ -31,15 +31,20 @@ function ProductPage() {
   const navigate = useNavigate();
   const params = useParams();
   const { slug } = params;
-  if (!localStorage.getItem('userInfo')) {
-    navigate(`/login?redirect=/product/${slug}`);
-  }
+
   const [{ loading, error, product }, dispatch] = useReducer(reducer, {
     product: [],
     loading: true,
     error: '',
   });
   useEffect(() => {
+    if (
+      !localStorage.getItem('userInfo') ||
+      localStorage.getItem('userInfo')['expiry'] <= new Date().getTime()
+    ) {
+      navigate(`/login?redirect=/cart`);
+    }
+
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
@@ -50,7 +55,7 @@ function ProductPage() {
       }
     };
     fetchData();
-  }, [slug]);
+  }, [slug, navigate]);
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart } = state;

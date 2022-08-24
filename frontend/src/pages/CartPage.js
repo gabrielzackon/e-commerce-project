@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
 import Row from 'react-bootstrap/Row';
@@ -42,6 +42,15 @@ export default function CartPage() {
     navigate('/shipping');
   };
 
+  useEffect(() => {
+    if (
+      !localStorage.getItem('userInfo') ||
+      localStorage.getItem('userInfo')['expiry'] <= new Date().getTime()
+    ) {
+      navigate(`/login?redirect=/cart`);
+    }
+  }, [navigate]);
+
   return (
     <div>
       <Helmet>
@@ -59,7 +68,7 @@ export default function CartPage() {
               {cartItems.map((item) => (
                 <ListGroup.Item key={item._id}>
                   <Row className="align-items-center">
-                    <Col md={4}>
+                    <Col md={6}>
                       <img
                         src={item.image}
                         alt={item.name}
@@ -67,7 +76,7 @@ export default function CartPage() {
                       ></img>{' '}
                       <Link to={`/product/${item.slug}`}>{item.name}</Link>
                     </Col>
-                    <Col md={3}>
+                    <Col md={2}>
                       <Button
                         variant="light"
                         onClick={() =>
@@ -88,7 +97,7 @@ export default function CartPage() {
                         <i className="fas fa-plus-circle"></i>
                       </Button>
                     </Col>
-                    <Col md={3}>${item.price}</Col>
+                    <Col md={1}>${item.price}</Col>
                     <Col md={2}>
                       <Button
                         variant="light"
@@ -96,6 +105,11 @@ export default function CartPage() {
                       >
                         <i className="fas fa-trash"></i>
                       </Button>
+                    </Col>
+                    <Col md={1}>
+                      <div>
+                        <input type="checkbox" id="remember-me" />
+                      </div>
                     </Col>
                   </Row>
                 </ListGroup.Item>

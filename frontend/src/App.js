@@ -21,11 +21,11 @@ import PlaceOrderPage from './pages/PlaceOrderPage';
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
-
   const logoutHandler = () => {
     ctxDispatch({ type: 'USER_LOGOUT' });
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentInfo');
+    localStorage.removeItem('userInfo');
   };
 
   const loginHandler = () => {
