@@ -9,7 +9,7 @@ import Badge from 'react-bootstrap/Badge';
 import Container from 'react-bootstrap/Container';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Store } from './Store';
 import CartPage from './pages/CartPage';
 import LoginPage from './pages/LoginPage';
@@ -17,6 +17,11 @@ import SignupPage from './pages/SignupPage';
 import ShippingPage from './pages/ShippingPage';
 import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
+import SearchBox from './components/SearchBox';
+import SearchPage from './pages/SearchPage';
+import Button from 'react-bootstrap/Button';
+import { getError } from './utils';
+import axios from 'axios';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -32,6 +37,21 @@ function App() {
     ctxDispatch({ type: 'USER_LOGIN' });
   };
 
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get(`/api/products/categories`);
+        setCategories(data);
+      } catch (err) {
+        alert(getError(err));
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="d-flex flex-column site-container">
@@ -41,7 +61,9 @@ function App() {
               <LinkContainer to="/">
                 <Navbar.Brand>Shirt In A Box</Navbar.Brand>
               </LinkContainer>
-              <Nav className="me-auto">
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <SearchBox />
+              <Nav className="me-auto  w-100  justify-content-end">
                 <Link to="/cart" className="nav-link">
                   Cart
                   {cart.cartItems.length > 0 && (
@@ -81,6 +103,7 @@ function App() {
             <Routes>
               <Route path="/product/:slug" element={<ProductPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/search" element={<SearchPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/shipping" element={<ShippingPage />} />
