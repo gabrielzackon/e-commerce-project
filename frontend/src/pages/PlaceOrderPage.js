@@ -13,10 +13,11 @@ export default function PlaceOrderPage() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
+  console.log(state);
 
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
   cart.itemsPrice = round2(
-    cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
+    cart.checkoutItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
   cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
   cart.taxPrice = round2(0.12 * cart.itemsPrice);
@@ -27,6 +28,8 @@ export default function PlaceOrderPage() {
   useEffect(() => {
     if (!cart.paymentInfo) {
       navigate('/payment');
+    } else if (!cart.checkoutItems.length > 0) {
+      navigate('/cart');
     }
   }, [cart, navigate]);
 
@@ -70,7 +73,7 @@ export default function PlaceOrderPage() {
             <Card.Body>
               <Card.Title>Items</Card.Title>
               <ListGroup variant="flush">
-                {cart.cartItems.map((item) => (
+                {cart.checkoutItems.map((item) => (
                   <ListGroup.Item key={item._id}>
                     <Row className="align-items-center">
                       <Col md={6}>
@@ -131,7 +134,7 @@ export default function PlaceOrderPage() {
                     <Button
                       type="button"
                       onClick={placeOrderHandler}
-                      disabled={cart.cartItems.length === 0}
+                      disabled={cart.checkoutItems.length === 0}
                     >
                       Place Order
                     </Button>
