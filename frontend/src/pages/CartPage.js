@@ -14,10 +14,10 @@ export default function CartPage() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const {
-    cart: { cartItems },
+    cart: { cartItems, checkoutItems },
   } = state;
 
-  const UpdateQuantityHandler = async (cartItem, quantity) => {
+  const updateQuantityHandler = async (cartItem, quantity) => {
     const { data } = await axios.get(`/api/products/${cartItem._id}`);
 
     if (data.countInStock < quantity) {
@@ -29,40 +29,53 @@ export default function CartPage() {
       type: 'CART_ADD_ITEM',
       payload: { ...cartItem, quantity },
     });
+
+    const cartItemObj = document.querySelector(
+      `input[type="checkbox"][id="${cartItem.slug}"]`
+    );
+
+    if (cartItemObj.checked) {
+      ctxDispatch({
+        type: 'CHECKOUT_ADD_ITEM',
+        payload: { ...cartItem, quantity },
+      });
+    }
   };
 
-  const deleteItemFromCarthandler = async (cartItem) => {
+  const checkoutCheckboxHandler = async (cartItem) => {
+    const cartItemObj = document.querySelector(
+      `input[type="checkbox"][id="${cartItem.slug}"]`
+    );
+    const actionType = cartItemObj.checked
+      ? 'CHECKOUT_ADD_ITEM'
+      : 'CHECKOUT_REMOVE_ITEM';
+
+    ctxDispatch({
+      type: actionType,
+      payload: { ...cartItem },
+    });
+  };
+
+  const deleteItemFromCarthandler = (cartItem) => {
     ctxDispatch({
       type: 'CART_REMOVE_ITEM',
       payload: cartItem,
     });
+
+    const cartItemObj = document.querySelector(
+      `input[type="checkbox"][id="${cartItem.slug}"]`
+    );
+
+    if (cartItemObj.checked) {
+      ctxDispatch({
+        type: 'CHECKOUT_REMOVE_ITEM',
+        payload: { ...cartItem },
+      });
+    }
   };
 
   const ProceedToCheckoutHandler = () => {
     navigate('/shipping');
-  };
-
-  const updateSubtotal = () => {
-    const checkedProducts = document.querySelectorAll(
-      'input[type="checkbox"]:checked'
-    );
-    let productsList = [];
-    checkedProducts.forEach((product) => {
-      productsList.push(product['id']);
-    });
-    const numberOfProducts = checkedProducts.length;
-    const filteredProducts = cartItems.filter((item) =>
-      productsList.includes(item['slug'])
-    );
-
-    let totalPrice = filteredProducts.reduce((total, product) => {
-      const productQuantity = document.getElementById(product['slug'])
-        .textContent;
-      return total + product['price'] * productQuantity;
-    }, 0);
-    document.getElementById(
-      'subtotal'
-    ).textContent = `Subtotal (${numberOfProducts} items): ${totalPrice}$`;
   };
 
   useEffect(() => {
@@ -72,6 +85,10 @@ export default function CartPage() {
     ) {
       navigate(`/login?redirect=/cart`);
     }
+    localStorage.removeItem('checkoutItems');
+    ctxDispatch({
+      type: 'CHECKOUT_INITIAL',
+    });
   }, [navigate]);
 
   return (
@@ -103,7 +120,7 @@ export default function CartPage() {
                       <Button
                         variant="light"
                         onClick={() =>
-                          UpdateQuantityHandler(item, item.quantity - 1)
+                          updateQuantityHandler(item, item.quantity - 1)
                         }
                         disabled={item.quantity === 1}
                       >
@@ -113,7 +130,7 @@ export default function CartPage() {
                       <Button
                         variant="light"
                         onClick={() =>
-                          UpdateQuantityHandler(item, item.quantity + 1)
+                          updateQuantityHandler(item, item.quantity + 1)
                         }
                         disabled={item.quantity === item.countInStock}
                       >
@@ -134,7 +151,7 @@ export default function CartPage() {
                         <input
                           type="checkbox"
                           id={item.slug}
-                          onChange={updateSubtotal}
+                          onChange={() => checkoutCheckboxHandler(item)}
                         />
                       </div>
                     </Col>
@@ -149,7 +166,15 @@ export default function CartPage() {
             <Card.Body>
               <ListGroup variant="flush">
                 <ListGroup.Item>
-                  <h3 id="subtotal">Subtotal (0 items): 0$</h3>
+                  <h3 id="subtotal">
+                    Subtotal (
+                    {checkoutItems.reduce((a, c) => a + c.quantity, 0)} items) :
+                    $
+                    {checkoutItems.reduce(
+                      (a, c) => a + c.price * c.quantity,
+                      0
+                    )}
+                  </h3>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <div className="d-grid">

@@ -31,6 +31,7 @@ function App() {
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentInfo');
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('checkoutItems');
   };
 
   const loginHandler = () => {
