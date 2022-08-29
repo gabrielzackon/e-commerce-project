@@ -35,12 +35,12 @@ const reducer = (state, action) => {
 
 const prices = [
   {
-    name: '$1 to $50',
-    value: '1-50',
+    name: '$1 to $100',
+    value: '1-100',
   },
   {
-    name: '$51 to $200',
-    value: '51-200',
+    name: '$101 to $200',
+    value: '101-200',
   },
   {
     name: '$201 to $1000',
@@ -173,7 +173,7 @@ export default function SearchScreen() {
                 <li key={p.value}>
                   <Link
                     to={getFilterUrl({ price: p.value })}
-                    className={p.value === price ? 'text-bold' : ''}
+                    className={`${p.value}` === `${price}` ? 'text-bold' : ''}
                   >
                     {p.name}
                   </Link>

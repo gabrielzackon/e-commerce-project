@@ -21,7 +21,7 @@ const data = {
       slug: 'man-utd-home-kit-22-23',
       category: 'Premier League',
       image: '/images/man-utd-home.png', // 600 X 600 pixels
-      price: 120,
+      price: '120',
       countInStock: 15,
       brand: 'Adidas',
       rating: 3.5,
@@ -33,7 +33,7 @@ const data = {
       slug: 'man-utd-away-kit-22-23',
       category: 'Premier League',
       image: '/images/man-utd-away.png', // 600 X 600 pixels
-      price: 120,
+      price: '120',
       countInStock: 10,
       brand: 'Adidas',
       rating: 2,
@@ -45,7 +45,7 @@ const data = {
       slug: 'fc-barcelona-home-kit-22-23',
       category: 'La Liga',
       image: '/images/barcelona-home.png', // 600 X 600 pixels
-      price: 110,
+      price: '110',
       countInStock: 0,
       brand: 'Nike',
       rating: 4,
@@ -57,7 +57,7 @@ const data = {
       slug: 'fc-barcelona-away-kit-22-23',
       category: 'La Liga',
       image: '/images/barcelona-away.png', // 600 X 600 pixels
-      price: 110,
+      price: '110',
       countInStock: 10,
       brand: 'Nike',
       rating: 4.6,
