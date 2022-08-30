@@ -36,6 +36,7 @@ export default function LoginPage() {
         password,
       });
       ctxDispatch({ type: 'USER_LOGIN', payload: data });
+      reportLoginActivity(data.name);
       const now = new Date();
       const ttl = document.getElementById('remember-me').checked
         ? TEN_DAYS_IN_MS
@@ -43,6 +44,18 @@ export default function LoginPage() {
       data['expiry'] = now.getTime() + ttl;
       localStorage.setItem('userInfo', JSON.stringify(data));
       navigate(redirect || '/');
+    } catch (err) {
+      alert(getError(err));
+    }
+  };
+
+  const reportLoginActivity = async (name) => {
+    try {
+      const { data } = await Axios.post('/api/login/activity/report', {
+        name,
+        email,
+      });
+      ctxDispatch({ type: 'USER_REPORT_LOGIN', payload: data });
     } catch (err) {
       alert(getError(err));
     }

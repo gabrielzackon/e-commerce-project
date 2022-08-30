@@ -59,6 +59,8 @@ function reducer(state, action) {
           checkoutItems: [],
         },
       };
+    case 'USER_REPORT_LOGIN':
+      return { ...state, userInfo: action.payload };
     case 'CHECKOUT_INITIAL':
       return {
         ...state,

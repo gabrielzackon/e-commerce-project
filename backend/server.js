@@ -5,6 +5,7 @@ import seedRouter from './routes/seedRoutes.js';
 import productRouter from './routes/productRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import orderRouter from './routes/orderRoutes.js';
+import LoginActivityRouter from './routes/LoginActivityRoutes.js';
 
 dotenv.config();
 
@@ -26,6 +27,8 @@ app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/login/activity', LoginActivityRouter);
+app.use('/api/seed/startup', seedRouter);
 
 const port = process.env.PORT || 5050;
 
