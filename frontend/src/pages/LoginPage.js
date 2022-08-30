@@ -23,8 +23,8 @@ export default function LoginPage() {
   const { dispatch: ctxDispatch } = useContext(Store);
 
   const userInfoObj = JSON.parse(localStorage.getItem('userInfo'));
-  const userInfo =
-    userInfoObj && userInfoObj['expiry'] <= new Date().getTime()
+  let userInfo =
+    userInfoObj && userInfoObj['expiry'] >= new Date().getTime()
       ? userInfoObj
       : null;
 

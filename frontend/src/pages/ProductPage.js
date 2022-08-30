@@ -38,13 +38,7 @@ function ProductPage() {
     error: '',
   });
   useEffect(() => {
-    if (
-      !localStorage.getItem('userInfo') ||
-      localStorage.getItem('userInfo')['expiry'] <= new Date().getTime()
-    ) {
-      navigate(`/login?redirect=/cart`);
-    }
-
+    navigate('/login?redirect=/cart');
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
@@ -72,7 +66,7 @@ function ProductPage() {
       type: 'CART_ADD_ITEM',
       payload: { ...product, quantity },
     });
-    navigate('/cart');
+    navigate('/login?redirect=/cart');
   };
   return loading ? (
     <LoadingBox />
