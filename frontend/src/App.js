@@ -22,6 +22,7 @@ import SearchPage from './pages/SearchPage';
 import Button from 'react-bootstrap/Button';
 import { getError } from './utils';
 import axios from 'axios';
+import OrderPage from './pages/OrderPage';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -110,6 +111,7 @@ function App() {
               <Route path="/shipping" element={<ShippingPage />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/placeorder" element={<PlaceOrderPage />} />
+              <Route path="/order/:id" element={<OrderPage />}></Route>
               <Route path="/" element={<HomePage />} />
             </Routes>
           </Container>
