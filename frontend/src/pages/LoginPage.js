@@ -36,7 +36,7 @@ export default function LoginPage() {
         password,
       });
       ctxDispatch({ type: 'USER_LOGIN', payload: data });
-      reportLoginActivity(data.name);
+      reportLoginActivity(data.name, data);
       const now = new Date();
       const ttl = document.getElementById('remember-me').checked
         ? TEN_DAYS_IN_MS
@@ -49,13 +49,13 @@ export default function LoginPage() {
     }
   };
 
-  const reportLoginActivity = async (name) => {
+  const reportLoginActivity = async (name, userData) => {
     try {
       const { data } = await Axios.post('/api/login/activity/report', {
         name,
         email,
       });
-      ctxDispatch({ type: 'USER_REPORT_LOGIN', payload: data });
+      ctxDispatch({ type: 'USER_REPORT_LOGIN', payload: userData });
     } catch (err) {
       alert(getError(err));
     }
