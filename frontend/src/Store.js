@@ -89,8 +89,18 @@ function reducer(state, action) {
       };
     case 'USER_REPORT_LOGIN':
       return { ...state, userInfo: action.payload };
+    case 'USER_REPORT_LOGOUT':
+      return {
+        ...state,
+        userInfo: null,
+        cart: {
+          cartItems: [],
+          shippingAddress: {},
+          paymentInfo: {},
+          checkoutItems: [],
+        },
+      };
     case 'CHECKOUT_INITIAL':
-      console.log('a', state);
       return {
         ...state,
         userInfo: localStorage.getItem('userInfo')

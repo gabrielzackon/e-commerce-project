@@ -21,13 +21,34 @@ import SearchBox from './components/SearchBox';
 import SearchPage from './pages/SearchPage';
 import Button from 'react-bootstrap/Button';
 import { getError } from './utils';
-import axios from 'axios';
+import Axios from 'axios';
 import OrderPage from './pages/OrderPage';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
+  const reportLogoutActivity = async (name, email, token) => {
+    try {
+      const { data } = await Axios.post(
+        '/api/logoutActivity/report',
+        {
+          name,
+          email,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      ctxDispatch({ type: 'USER_REPORT_LOGOUT' });
+    } catch (err) {
+      alert(getError(err));
+    }
+  };
+
   const logoutHandler = () => {
+    reportLogoutActivity(userInfo.name, userInfo.email, userInfo.token);
     ctxDispatch({ type: 'USER_LOGOUT' });
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentInfo');
@@ -42,7 +63,7 @@ function App() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get(`/api/products/categories`);
+        const { data } = await Axios.get(`/api/products/categories`);
         setCategories(data);
       } catch (err) {
         alert(getError(err));

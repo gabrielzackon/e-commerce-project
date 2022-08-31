@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Rating from './Rating';
 import axios from 'axios';
 import { Store } from '../Store';
+import { reportATCActivity } from '../utils';
 
 function Product(props) {
   const navigate = useNavigate();
@@ -13,8 +14,14 @@ function Product(props) {
   const {
     cart: { cartItems },
   } = state;
+  const userInfoObj = JSON.parse(localStorage.getItem('userInfo'));
+  const userInfo =
+    userInfoObj && userInfoObj['expiry'] >= new Date().getTime()
+      ? userInfoObj
+      : null;
+
   const addToCartHandler = async (item) => {
-    if (!localStorage.getItem('userInfo')) {
+    if (!userInfo) {
       navigate(`/login`);
     } else {
       const existItem = cartItems.find((x) => x._id === product._id);
@@ -30,6 +37,13 @@ function Product(props) {
         type: 'CART_ADD_ITEM',
         payload: { ...item, quantity },
       });
+
+      reportATCActivity(
+        state.userInfo.name,
+        state.userInfo.email,
+        data,
+        state.userInfo.token
+      );
     }
   };
 

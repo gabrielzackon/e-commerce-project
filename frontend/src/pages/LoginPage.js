@@ -16,14 +16,13 @@ export default function LoginPage() {
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { dispatch: ctxDispatch } = useContext(Store);
 
   const userInfoObj = JSON.parse(localStorage.getItem('userInfo'));
-  let userInfo =
+  const userInfo =
     userInfoObj && userInfoObj['expiry'] >= new Date().getTime()
       ? userInfoObj
       : null;

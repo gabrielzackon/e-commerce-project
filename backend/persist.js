@@ -3,23 +3,29 @@ import bcrypt from 'bcryptjs';
 import { generateToken, isAuth } from './utils.js';
 import expressAsyncHandler from 'express-async-handler';
 import LoginActivity from './models/LoginActivityModel.js';
+import LogoutActivity from './models/LogoutActivityModel.js';
+import AddToCartActivity from './models/AddToCartActivityModel.js';
 import User from './models/UserModel.js';
 import Product from './models/ProductModel.js';
-import Order from './models/orderModel.js';
+import Order from './models/OrderModel.js';
 import Cart from './models/CartModel.js ';
 import data from './data.js';
 
 const router = express.Router();
 
-// Seed
+// Startup
 router.post(
   '/startup',
   expressAsyncHandler(async (req, res) => {
     await Product.deleteMany({});
-    const products = await Product.insertMany(data.products);
     await User.deleteMany({});
+    await LoginActivity.deleteMany({});
+    await Order.deleteMany({});
+    await LogoutActivity.deleteMany({});
+    await AddToCartActivity.deleteMany({});
+    await Cart.deleteMany({});
+    const products = await Product.insertMany(data.products);
     const users = await User.insertMany(data.users);
-    await LoginActivity.remove({});
     res.status(201).send({
       message: 'Set up DB with users and products Successfully',
       payloda: { products: products, users: users },
@@ -38,6 +44,42 @@ router.post(
     });
     const loginReport = await newLoginReport.save();
     res.status(201).send({ message: 'New Login Report Created', loginReport });
+  })
+);
+
+// Logout Activity
+router.post(
+  '/logoutActivity/report',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const newLogoutReport = new LogoutActivity({
+      name: req.body.name,
+      email: req.body.email,
+    });
+    const logoutReport = await newLogoutReport.save();
+    res
+      .status(201)
+      .send({ message: 'New Logout Report Created', logoutReport });
+  })
+);
+
+// Add To Cart Activity
+router.post(
+  '/addToCartActivity/report',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const newATCReport = new AddToCartActivity({
+      email: req.body.email,
+      slug: req.body.product.slug,
+      name: req.body.name,
+      image: req.body.product.image,
+      price: req.body.product.price,
+      product: req.body.product._id,
+    });
+    const addToCartReport = await newATCReport.save();
+    res
+      .status(201)
+      .send({ message: 'New ATC Report Created', addToCartReport });
   })
 );
 

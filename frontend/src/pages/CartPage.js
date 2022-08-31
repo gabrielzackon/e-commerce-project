@@ -9,6 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { reportATCActivity } from '../utils';
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function CartPage() {
     cart: { cartItems, checkoutItems },
   } = state;
 
-  const updateQuantityHandler = async (cartItem, quantity) => {
+  const updateQuantityHandler = async (cartItem, quantity, increaseFlag) => {
     const { data } = await axios.get(`/api/products/${cartItem._id}`);
 
     if (data.countInStock < quantity) {
@@ -29,6 +30,15 @@ export default function CartPage() {
       type: 'CART_ADD_ITEM',
       payload: { ...cartItem, quantity },
     });
+
+    if (increaseFlag) {
+      reportATCActivity(
+        state.userInfo.name,
+        state.userInfo.email,
+        data,
+        state.userInfo.token
+      );
+    }
 
     const cartItemObj = document.querySelector(
       `input[type="checkbox"][id="${cartItem.slug}"]`
@@ -120,7 +130,7 @@ export default function CartPage() {
                       <Button
                         variant="light"
                         onClick={() =>
-                          updateQuantityHandler(item, item.quantity - 1)
+                          updateQuantityHandler(item, item.quantity - 1, false)
                         }
                         disabled={item.quantity === 1}
                       >
@@ -130,7 +140,7 @@ export default function CartPage() {
                       <Button
                         variant="light"
                         onClick={() =>
-                          updateQuantityHandler(item, item.quantity + 1)
+                          updateQuantityHandler(item, item.quantity + 1, true)
                         }
                         disabled={item.quantity === item.countInStock}
                       >

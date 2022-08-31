@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import Axios from 'axios';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
@@ -11,7 +11,7 @@ import Rating from '../components/Rating';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-import { getError } from '../utils';
+import { getError, reportATCActivity } from '../utils';
 import { Store } from '../Store';
 
 const reducer = (state, action) => {
@@ -37,12 +37,21 @@ function ProductPage() {
     loading: true,
     error: '',
   });
+
+  const userInfoObj = JSON.parse(localStorage.getItem('userInfo'));
+  const userInfo =
+    userInfoObj && userInfoObj['expiry'] >= new Date().getTime()
+      ? userInfoObj
+      : null;
+
   useEffect(() => {
-    navigate('/login?redirect=/cart');
+    if (!userInfo) {
+      navigate(`/login?redirect=${window.location.pathname}`);
+    }
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get(`/api/products/slug/${slug}`);
+        const result = await Axios.get(`/api/products/slug/${slug}`);
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (error) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
@@ -54,9 +63,10 @@ function ProductPage() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart } = state;
   const addToCartHandler = async () => {
+    navigate('/login?redirect=/cart');
     const existItem = cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`);
+    const { data } = await Axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
       window.alert('Product out of stock');
       return;
@@ -66,7 +76,12 @@ function ProductPage() {
       type: 'CART_ADD_ITEM',
       payload: { ...product, quantity },
     });
-    navigate('/login?redirect=/cart');
+    reportATCActivity(
+      state.userInfo.name,
+      state.userInfo.email,
+      data,
+      state.userInfo.token
+    );
   };
   return loading ? (
     <LoadingBox />
