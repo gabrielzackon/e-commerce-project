@@ -85,7 +85,9 @@ export default function OrderScreen() {
                   Delivered at {order.deliveredAt}
                 </MessageBox>
               ) : (
-                <MessageBox variant="danger">Not Delivered</MessageBox>
+                <MessageBox variant="warning">
+                  Delivery on it's way....
+                </MessageBox>
               )}
             </Card.Body>
           </Card>
@@ -94,7 +96,7 @@ export default function OrderScreen() {
               <Card.Title>Payment</Card.Title>
               {order.isPaid ? (
                 <MessageBox variant="success">
-                  Paid at {order.paidAt}
+                  Successfully Paid {order.paidAt}
                 </MessageBox>
               ) : (
                 <MessageBox variant="danger">Not Paid</MessageBox>
