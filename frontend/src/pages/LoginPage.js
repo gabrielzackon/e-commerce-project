@@ -68,7 +68,7 @@ export default function LoginPage() {
   const reportLoginActivity = async (name, userData) => {
     try {
       const { data } = await Axios.post(
-        '/api/login/activity/report',
+        '/api/loginActivity/report',
         {
           name,
           email,

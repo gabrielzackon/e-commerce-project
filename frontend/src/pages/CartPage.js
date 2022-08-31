@@ -182,7 +182,7 @@ export default function CartPage() {
                       type="button"
                       variant="primary"
                       onClick={() => ProceedToCheckoutHandler()}
-                      disabled={cartItems.length === 0}
+                      disabled={checkoutItems.length === 0}
                     >
                       Proceed to Checkout
                     </Button>

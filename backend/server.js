@@ -1,12 +1,7 @@
-import express from 'express';
+import express, { Router } from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import seedRouter from './routes/SeedRoutes.js';
-import productRouter from './routes/ProductRoutes.js';
-import userRouter from './routes/UserRoutes.js';
-import orderRouter from './routes/OrderRoutes.js';
-import cartRouter from './routes/CartRoutes.js';
-import LoginActivityRouter from './routes/LoginActivityRoutes.js';
+import router from './persist.js';
 
 dotenv.config();
 
@@ -23,14 +18,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use('/api/seed', seedRouter);
-app.use('/api/products', productRouter);
-app.use('/api/users', userRouter);
-app.use('/api/orders', orderRouter);
-app.use('/api/carts', cartRouter);
-app.use('/api/login/activity', LoginActivityRouter);
-app.use('/api/seed/startup', seedRouter);
+app.use('/api', router);
 
 const port = process.env.PORT || 5050;
 
