@@ -10,5 +10,5 @@ const loginActivitySchema = new mongoose.Schema(
   }
 );
 
-const LoginActivity = mongoose.model('LoginActivity', loginActivitySchema);
+const LoginActivity = mongoose.model('login_activity', loginActivitySchema);
 export default LoginActivity;
