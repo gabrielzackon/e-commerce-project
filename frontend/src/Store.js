@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from 'react';
-
+import Axios from 'axios';
+import { getError } from './utils';
 export const Store = createContext();
 
 const initialState = {
@@ -21,6 +22,25 @@ const initialState = {
   },
 };
 
+const updateCartInDB = async (email, cartItems, token) => {
+  try {
+    const { data } = await Axios.post(
+      '/api/carts',
+      {
+        email: email,
+        cartItems: cartItems,
+      },
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+  } catch (err) {
+    alert(getError(err));
+  }
+};
+
 function reducer(state, action) {
   switch (action.type) {
     case 'CART_ADD_ITEM':
@@ -34,20 +54,28 @@ function reducer(state, action) {
           )
         : [...state.cart.cartItems, newCartItem];
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      updateCartInDB(state.userInfo.email, cartItems, state.userInfo.token);
       return { ...state, cart: { ...state.cart, cartItems } };
     case 'CART_REMOVE_ITEM': {
       const cartItems = state.cart.cartItems.filter(
         (item) => item._id !== action.payload._id
       );
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      updateCartInDB(state.userInfo.email, cartItems, state.userInfo.token);
       return { ...state, cart: { ...state.cart, cartItems } };
     }
 
     case 'CART_CLEAR':
+      updateCartInDB(state.userInfo.email, [], state.userInfo.token);
       return { ...state, cart: { ...state.cart, cartItems: [] } };
 
+    case 'SET_USER_CART':
+      return { ...state, cart: { ...state.cart, cartItems: action.payload } };
     case 'USER_LOGIN':
-      return { ...state, userInfo: action.payload };
+      return {
+        ...state,
+        userInfo: action.payload,
+      };
     case 'USER_LOGOUT':
       return {
         ...state,
@@ -62,6 +90,7 @@ function reducer(state, action) {
     case 'USER_REPORT_LOGIN':
       return { ...state, userInfo: action.payload };
     case 'CHECKOUT_INITIAL':
+      console.log('a', state);
       return {
         ...state,
         userInfo: localStorage.getItem('userInfo')
@@ -74,9 +103,7 @@ function reducer(state, action) {
           paymentInfo: localStorage.getItem('paymentInfo')
             ? JSON.parse(localStorage.getItem('paymentInfo'))
             : {},
-          cartItems: localStorage.getItem('cartItems')
-            ? JSON.parse(localStorage.getItem('cartItems'))
-            : [],
+          cartItems: state.cart.cartItems,
           checkoutItems: [],
         },
       };

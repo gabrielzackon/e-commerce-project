@@ -33,10 +33,7 @@ function App() {
     localStorage.removeItem('paymentInfo');
     localStorage.removeItem('userInfo');
     localStorage.removeItem('checkoutItems');
-  };
-
-  const loginHandler = () => {
-    ctxDispatch({ type: 'USER_LOGIN' });
+    localStorage.removeItem('cartItems');
   };
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -92,7 +89,7 @@ function App() {
                     </Link>
                   </NavDropdown>
                 ) : (
-                  <Link className="nav-link" to="/login" onClick={loginHandler}>
+                  <Link className="nav-link" to="/login">
                     Log In
                   </Link>
                 )}

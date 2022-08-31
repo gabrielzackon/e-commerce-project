@@ -7,7 +7,6 @@ import Product from '../components/Product';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
@@ -27,12 +26,13 @@ function HomePage() {
     loading: true,
     error: '',
   });
+
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get('/api/products');
-        dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
+        const products = await axios.get('/api/products');
+        dispatch({ type: 'FETCH_SUCCESS', payload: products.data });
       } catch (error) {
         dispatch({ type: 'FETCH_FAIL', payload: error.message });
       }

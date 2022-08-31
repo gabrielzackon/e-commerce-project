@@ -35,7 +35,11 @@ export default function LoginPage() {
         email,
         password,
       });
-      ctxDispatch({ type: 'USER_LOGIN', payload: data });
+
+      ctxDispatch({
+        type: 'USER_LOGIN',
+        payload: data,
+      });
       const now = new Date();
       const ttl = document.getElementById('remember-me').checked
         ? TEN_DAYS_IN_MS
@@ -43,7 +47,19 @@ export default function LoginPage() {
       data['expiry'] = now.getTime() + ttl;
       localStorage.setItem('userInfo', JSON.stringify(data));
       reportLoginActivity(data.name, data);
+      setUserCart(email, data.token);
       navigate(redirect || '/');
+    } catch (err) {
+      alert(getError(err));
+    }
+  };
+
+  const setUserCart = async (email, token) => {
+    try {
+      const cartData = await Axios.get(`/api/carts/${email}`, {
+        headers: { authorization: `Bearer ${token}` },
+      });
+      ctxDispatch({ type: 'SET_USER_CART', payload: cartData.data });
     } catch (err) {
       alert(getError(err));
     }
