@@ -12,8 +12,7 @@ const reducer = (state, action) => {
     case 'FETCH_REQUEST':
       return { ...state, loading: true };
     case 'FETCH_SUCCESS':
-      console.log(action);
-      return { ...state, activities: action.payload.loginData, loading: false };
+      return { ...state, activities: action.payload, loading: false };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     default:
@@ -34,21 +33,12 @@ export default function LoginActivityPage() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const { loginData } = await axios.get(
+        const { data } = await axios.get(
           `/api/loginactivity`,
 
           { headers: { Authorization: `Bearer ${userInfo.token}` } }
         );
-        const { logoutData } = await axios.get(
-          `/api/loginactivity`,
-
-          { headers: { Authorization: `Bearer ${userInfo.token}` } }
-        );
-        console.log(loginData, logoutData);
-        dispatch({
-          type: 'FETCH_SUCCESS',
-          payload: { loginData: loginData, logoutData: logoutData },
-        });
+        dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (error) {
         dispatch({
           type: 'FETCH_FAIL',
