@@ -47,16 +47,6 @@ router.post(
   })
 );
 
-router.get(
-  '/loginactivity',
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const activities = await LoginActivity.find({});
-    console.log(activities);
-    res.send(activities);
-  })
-);
-
 // Logout Activity
 router.post(
   '/logoutActivity/report',
@@ -90,6 +80,18 @@ router.post(
     res
       .status(201)
       .send({ message: 'New ATC Report Created', addToCartReport });
+  })
+);
+
+// Users activity
+router.get(
+  '/activity/summary',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const logins = await LoginActivity.find({});
+    const logouts = await LogoutActivity.find({});
+    const addToCarts = await AddToCartActivity.find({});
+    res.send(logins.concat(logouts).concat(addToCarts));
   })
 );
 
@@ -224,7 +226,7 @@ router.get('/products', async (req, res) => {
   res.send(products);
 });
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 9;
 router.get(
   '/products/search',
   expressAsyncHandler(async (req, res) => {

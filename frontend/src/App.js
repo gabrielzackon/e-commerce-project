@@ -23,9 +23,8 @@ import { getError } from './utils';
 import Axios from 'axios';
 import OrderPage from './pages/OrderPage';
 import ProtectedRoute from './components/ProtectedRoute.js';
-import DashboardPage from './pages/DashboardPage';
 import AdminRoute from './components/AdminRoute';
-import LoginActivityPage from './pages/LoginActivityPage';
+import UsersActivityPage from './pages/UsersActivityPage';
 import { CookiesProvider, useCookies } from 'react-cookie';
 import ProductListPage from './pages/ProductListPage';
 import ProductEditPage from './pages/ProductEditPage';
@@ -126,8 +125,8 @@ function App() {
                   )}
                   {userInfo && userInfo.isAdmin && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
-                      <LinkContainer to="/admin/loginactivity">
-                        <NavDropdown.Item>Log in activity</NavDropdown.Item>
+                      <LinkContainer to="/admin/useractivity">
+                        <NavDropdown.Item>Users activity</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
@@ -158,10 +157,10 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path="/admin/loginactivity"
+                  path="/admin/useractivity"
                   element={
                     <AdminRoute>
-                      <LoginActivityPage />
+                      <UsersActivityPage />
                     </AdminRoute>
                   }
                 ></Route>
@@ -177,7 +176,7 @@ function App() {
                   path="/admin/product/:id"
                   element={
                     <AdminRoute>
-                      <ProductEditScreen />
+                      <ProductEditPage />
                     </AdminRoute>
                   }
                 ></Route>

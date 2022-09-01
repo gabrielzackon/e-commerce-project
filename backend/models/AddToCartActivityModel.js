@@ -7,6 +7,7 @@ const addToCartActivitySchema = new mongoose.Schema(
     name: { type: String, required: true },
     image: { type: String, required: true },
     price: { type: Number, required: true },
+    activityType: { type: String, default: 'addToCart' },
     product: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',

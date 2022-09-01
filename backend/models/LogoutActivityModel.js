@@ -4,6 +4,7 @@ const logoutActivitySchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
+    activityType: { type: String, default: 'logout' },
   },
   {
     timestamps: true,
