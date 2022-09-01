@@ -27,6 +27,8 @@ import DashboardPage from './pages/DashboardPage';
 import AdminRoute from './components/AdminRoute';
 import LoginActivityPage from './pages/LoginActivityPage';
 import { CookiesProvider, useCookies } from 'react-cookie';
+import ProductListPage from './pages/ProductListPage';
+import ProductEditPage from './pages/ProductEditPage';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -124,20 +126,11 @@ function App() {
                   )}
                   {userInfo && userInfo.isAdmin && (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
-                      <LinkContainer to="/admin/dashboard">
-                        <NavDropdown.Item>Dashboard</NavDropdown.Item>
-                      </LinkContainer>
                       <LinkContainer to="/admin/loginactivity">
                         <NavDropdown.Item>Log in activity</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/productlist">
+                      <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/orderlist">
-                        <NavDropdown.Item>Orders</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/userlist">
-                        <NavDropdown.Item>Users</NavDropdown.Item>
                       </LinkContainer>
                     </NavDropdown>
                   )}
@@ -165,18 +158,26 @@ function App() {
                   }
                 ></Route>
                 <Route
-                  path="/admin/dashboard"
-                  element={
-                    <AdminRoute>
-                      <DashboardPage />
-                    </AdminRoute>
-                  }
-                ></Route>
-                <Route
                   path="/admin/loginactivity"
                   element={
                     <AdminRoute>
                       <LoginActivityPage />
+                    </AdminRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/products"
+                  element={
+                    <AdminRoute>
+                      <ProductListPage />
+                    </AdminRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/product/:id"
+                  element={
+                    <AdminRoute>
+                      <ProductEditScreen />
                     </AdminRoute>
                   }
                 ></Route>
