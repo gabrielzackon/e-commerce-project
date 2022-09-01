@@ -7,10 +7,12 @@ import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
 import { getError } from '../utils';
+import { useCookies } from 'react-cookie';
 
 export default function LoginPage() {
   const THIRTY_MINS_IN_MS = 30 * 60 * 1000;
   const TEN_DAYS_IN_MS = 10 * 24 * 60 * 60 * 1000;
+  const [cookies, setCookie] = useCookies(['userInfo']);
 
   const navigate = useNavigate();
   const { search } = useLocation();
@@ -21,11 +23,7 @@ export default function LoginPage() {
 
   const { dispatch: ctxDispatch } = useContext(Store);
 
-  const userInfoObj = JSON.parse(localStorage.getItem('userInfo'));
-  const userInfo =
-    userInfoObj && userInfoObj['expiry'] >= new Date().getTime()
-      ? userInfoObj
-      : null;
+  const userInfo = cookies['userInfo'];
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -39,14 +37,19 @@ export default function LoginPage() {
         type: 'USER_LOGIN',
         payload: data,
       });
-      const now = new Date();
+      const expiry = new Date();
       const ttl = document.getElementById('remember-me').checked
         ? TEN_DAYS_IN_MS
         : THIRTY_MINS_IN_MS;
-      data['expiry'] = now.getTime() + ttl;
+      expiry.setTime(expiry.getTime() + ttl);
+      data['expiry'] = expiry.getTime();
       localStorage.setItem('userInfo', JSON.stringify(data));
       reportLoginActivity(data.name, data);
       setUserCart(email, data.token);
+      setCookie('userInfo', JSON.stringify(data), {
+        path: '/',
+        expires: expiry,
+      });
       navigate(redirect || '/');
     } catch (err) {
       alert(getError(err));
@@ -85,10 +88,11 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    if (userInfo) {
+    console.log('a');
+    if (cookies['userInfo']) {
       navigate(redirect);
     }
-  }, [navigate, redirect, userInfo]);
+  }, [navigate, redirect]);
 
   return (
     <Container className="small-container">

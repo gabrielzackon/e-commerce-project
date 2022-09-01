@@ -24,7 +24,7 @@ function Product(props) {
     if (!userInfo) {
       navigate(`/login`);
     } else {
-      const existItem = cartItems.find((x) => x._id === product._id);
+      const existItem = cartItems.find((x) => x._id === item._id);
       const quantity = existItem ? existItem.quantity + 1 : 1;
       const { data } = await axios.get(`/api/products/${item._id}`);
 

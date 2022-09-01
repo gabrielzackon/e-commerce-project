@@ -19,7 +19,6 @@ import PaymentPage from './pages/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrderPage';
 import SearchBox from './components/SearchBox';
 import SearchPage from './pages/SearchPage';
-import Button from 'react-bootstrap/Button';
 import { getError } from './utils';
 import Axios from 'axios';
 import OrderPage from './pages/OrderPage';
@@ -27,10 +26,12 @@ import ProtectedRoute from './components/ProtectedRoute.js';
 import DashboardPage from './pages/DashboardPage';
 import AdminRoute from './components/AdminRoute';
 import LoginActivityPage from './pages/LoginActivityPage';
+import { CookiesProvider, useCookies } from 'react-cookie';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
+  const [cookies, setCookie, removeCookie] = useCookies(['userInfo']);
   const reportLogoutActivity = async (name, email, token) => {
     try {
       const { data } = await Axios.post(
@@ -59,6 +60,8 @@ function App() {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('checkoutItems');
     localStorage.removeItem('cartItems');
+    setCookie('userInfo', { path: '/' });
+    removeCookie('userInfo', { path: '/' });
   };
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
@@ -77,114 +80,116 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
-      <div className="d-flex flex-column site-container">
-        <header>
-          <Navbar bg="dark" variant="dark">
-            <Container>
-              <LinkContainer to="/">
-                <Navbar.Brand>Shirt In A Box</Navbar.Brand>
-              </LinkContainer>
-              <Navbar.Toggle aria-controls="basic-navbar-nav" />
-              <SearchBox />
-              <Nav className="me-auto  w-100  justify-content-end">
-                <Link to="/cart" className="nav-link">
-                  Cart
-                  {cart.cartItems.length > 0 && (
-                    <Badge pill bg="danger">
-                      {cart.cartItems.reduce((acc, x) => acc + x.quantity, 0)}
-                    </Badge>
-                  )}
-                </Link>
-                {userInfo ? (
-                  <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                    <LinkContainer to="/profile">
-                      <NavDropdown.Item>User Profile</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/orderhistory">
-                      <NavDropdown.Item>Order History</NavDropdown.Item>
-                    </LinkContainer>
-                    <NavDropdown.Divider />
-                    <Link
-                      className="dropdown-item"
-                      to="/"
-                      onClick={logoutHandler}
-                    >
-                      Log Out
-                    </Link>
-                  </NavDropdown>
-                ) : (
-                  <Link className="nav-link" to="/login">
-                    Log In
+    <CookiesProvider>
+      <BrowserRouter>
+        <div className="d-flex flex-column site-container">
+          <header>
+            <Navbar bg="dark" variant="dark">
+              <Container>
+                <LinkContainer to="/">
+                  <Navbar.Brand>Shirt In A Box</Navbar.Brand>
+                </LinkContainer>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <SearchBox />
+                <Nav className="me-auto  w-100  justify-content-end">
+                  <Link to="/cart" className="nav-link">
+                    Cart
+                    {cart.cartItems.length > 0 && (
+                      <Badge pill bg="danger">
+                        {cart.cartItems.reduce((acc, x) => acc + x.quantity, 0)}
+                      </Badge>
+                    )}
                   </Link>
-                )}
-                {userInfo && userInfo.isAdmin && (
-                  <NavDropdown title="Admin" id="admin-nav-dropdown">
-                    <LinkContainer to="/admin/dashboard">
-                      <NavDropdown.Item>Dashboard</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/loginactivity">
-                      <NavDropdown.Item>Log in activity</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/productlist">
-                      <NavDropdown.Item>Products</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/orderlist">
-                      <NavDropdown.Item>Orders</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/userlist">
-                      <NavDropdown.Item>Users</NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
-                )}
-              </Nav>
+                  {userInfo ? (
+                    <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                      <LinkContainer to="/profile">
+                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/orderhistory">
+                        <NavDropdown.Item>Order History</NavDropdown.Item>
+                      </LinkContainer>
+                      <NavDropdown.Divider />
+                      <Link
+                        className="dropdown-item"
+                        to="/"
+                        onClick={logoutHandler}
+                      >
+                        Log Out
+                      </Link>
+                    </NavDropdown>
+                  ) : (
+                    <Link className="nav-link" to="/login">
+                      Log In
+                    </Link>
+                  )}
+                  {userInfo && userInfo.isAdmin && (
+                    <NavDropdown title="Admin" id="admin-nav-dropdown">
+                      <LinkContainer to="/admin/dashboard">
+                        <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/loginactivity">
+                        <NavDropdown.Item>Log in activity</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/productlist">
+                        <NavDropdown.Item>Products</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/orderlist">
+                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/userlist">
+                        <NavDropdown.Item>Users</NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  )}
+                </Nav>
+              </Container>
+            </Navbar>
+          </header>
+          <main>
+            <Container className="mt-3">
+              <Routes>
+                <Route path="/product/:slug" element={<ProductPage />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+                <Route path="/shipping" element={<ShippingPage />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/placeorder" element={<PlaceOrderPage />} />
+                <Route
+                  path="/order/:id"
+                  element={
+                    <ProtectedRoute>
+                      <OrderPage />
+                    </ProtectedRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <AdminRoute>
+                      <DashboardPage />
+                    </AdminRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/loginactivity"
+                  element={
+                    <AdminRoute>
+                      <LoginActivityPage />
+                    </AdminRoute>
+                  }
+                ></Route>
+                <Route path="/" element={<HomePage />} />
+              </Routes>
             </Container>
-          </Navbar>
-        </header>
-        <main>
-          <Container className="mt-3">
-            <Routes>
-              <Route path="/product/:slug" element={<ProductPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/search" element={<SearchPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/shipping" element={<ShippingPage />} />
-              <Route path="/payment" element={<PaymentPage />} />
-              <Route path="/placeorder" element={<PlaceOrderPage />} />
-              <Route
-                path="/order/:id"
-                element={
-                  <ProtectedRoute>
-                    <OrderPage />
-                  </ProtectedRoute>
-                }
-              ></Route>
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <AdminRoute>
-                    <DashboardPage />
-                  </AdminRoute>
-                }
-              ></Route>
-              <Route
-                path="/admin/loginactivity"
-                element={
-                  <AdminRoute>
-                    <LoginActivityPage />
-                  </AdminRoute>
-                }
-              ></Route>
-              <Route path="/" element={<HomePage />} />
-            </Routes>
-          </Container>
-        </main>
-        <footer>
-          <div className="text-center">All rights reserved</div>
-        </footer>
-      </div>
-    </BrowserRouter>
+          </main>
+          <footer>
+            <div className="text-center">All rights reserved</div>
+          </footer>
+        </div>
+      </BrowserRouter>
+    </CookiesProvider>
   );
 }
 
