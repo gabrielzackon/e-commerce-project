@@ -102,13 +102,13 @@ function App() {
                       </Badge>
                     )}
                   </Link>
-                  {userInfo ? (
-                    <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                      <LinkContainer to="/profile">
-                        <NavDropdown.Item>User Profile</NavDropdown.Item>
+                  {userInfo && userInfo.isAdmin ? (
+                    <NavDropdown title="Admin" id="admin-nav-dropdown">
+                      <LinkContainer to="/admin/useractivity">
+                        <NavDropdown.Item>Users activity</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/orderhistory">
-                        <NavDropdown.Item>Order History</NavDropdown.Item>
+                      <LinkContainer to="/admin/products">
+                        <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
                       <NavDropdown.Divider />
                       <Link
@@ -119,19 +119,19 @@ function App() {
                         Log Out
                       </Link>
                     </NavDropdown>
-                  ) : (
+                  ) : !userInfo ? (
                     <Link className="nav-link" to="/login">
                       Log In
                     </Link>
-                  )}
-                  {userInfo && userInfo.isAdmin && (
-                    <NavDropdown title="Admin" id="admin-nav-dropdown">
-                      <LinkContainer to="/admin/useractivity">
-                        <NavDropdown.Item>Users activity</NavDropdown.Item>
-                      </LinkContainer>
-                      <LinkContainer to="/admin/products">
-                        <NavDropdown.Item>Products</NavDropdown.Item>
-                      </LinkContainer>
+                  ) : (
+                    <NavDropdown title={userInfo.name} id="admin-nav-dropdown">
+                      <Link
+                        className="dropdown-item"
+                        to="/"
+                        onClick={logoutHandler}
+                      >
+                        Log Out
+                      </Link>
                     </NavDropdown>
                   )}
                 </Nav>
