@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import { generateToken, isAuth } from './utils.js';
+import { generateToken, isAuth, isAdmin } from './utils.js';
 import expressAsyncHandler from 'express-async-handler';
 import LoginActivity from './models/LoginActivityModel.js';
 import LogoutActivity from './models/LogoutActivityModel.js';
@@ -44,6 +44,16 @@ router.post(
     });
     const loginReport = await newLoginReport.save();
     res.status(201).send({ message: 'New Login Report Created', loginReport });
+  })
+);
+
+router.get(
+  '/loginactivity',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const activities = await LoginActivity.find({});
+    console.log(activities);
+    res.send(activities);
   })
 );
 
@@ -272,6 +282,50 @@ router.get(
     } else {
       res.status(404).send({ message: 'Order Not Found' });
     }
+  })
+);
+
+router.get(
+  '/orders/summary',
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const orders = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          numOrders: { $sum: 1 },
+          totalSales: { $sum: '$totalPrice' },
+        },
+      },
+    ]);
+    const users = await User.aggregate([
+      {
+        $group: {
+          _id: null,
+          numUsers: { $sum: 1 },
+        },
+      },
+    ]);
+    const dailyOrders = await Order.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          orders: { $sum: 1 },
+          sales: { $sum: '$totalPrice' },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+    const productCategories = await Product.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    res.send({ users, orders, dailyOrders, productCategories });
   })
 );
 

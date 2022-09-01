@@ -26,6 +26,7 @@ import OrderPage from './pages/OrderPage';
 import ProtectedRoute from './components/ProtectedRoute.js';
 import DashboardPage from './pages/DashboardPage';
 import AdminRoute from './components/AdminRoute';
+import LoginActivityPage from './pages/LoginActivityPage';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -122,6 +123,9 @@ function App() {
                     <LinkContainer to="/admin/dashboard">
                       <NavDropdown.Item>Dashboard</NavDropdown.Item>
                     </LinkContainer>
+                    <LinkContainer to="/admin/loginactivity">
+                      <NavDropdown.Item>Log in activity</NavDropdown.Item>
+                    </LinkContainer>
                     <LinkContainer to="/admin/productlist">
                       <NavDropdown.Item>Products</NavDropdown.Item>
                     </LinkContainer>
@@ -161,6 +165,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <DashboardPage />
+                  </AdminRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/loginactivity"
+                element={
+                  <AdminRoute>
+                    <LoginActivityPage />
                   </AdminRoute>
                 }
               ></Route>
