@@ -23,6 +23,9 @@ import Button from 'react-bootstrap/Button';
 import { getError } from './utils';
 import Axios from 'axios';
 import OrderPage from './pages/OrderPage';
+import ProtectedRoute from './components/ProtectedRoute.js';
+import DashboardPage from './pages/DashboardPage';
+import AdminRoute from './components/AdminRoute';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -114,6 +117,22 @@ function App() {
                     Log In
                   </Link>
                 )}
+                {userInfo && userInfo.isAdmin && (
+                  <NavDropdown title="Admin" id="admin-nav-dropdown">
+                    <LinkContainer to="/admin/dashboard">
+                      <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/productlist">
+                      <NavDropdown.Item>Products</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/orderlist">
+                      <NavDropdown.Item>Orders</NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/userlist">
+                      <NavDropdown.Item>Users</NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                )}
               </Nav>
             </Container>
           </Navbar>
@@ -129,7 +148,22 @@ function App() {
               <Route path="/shipping" element={<ShippingPage />} />
               <Route path="/payment" element={<PaymentPage />} />
               <Route path="/placeorder" element={<PlaceOrderPage />} />
-              <Route path="/order/:id" element={<OrderPage />}></Route>
+              <Route
+                path="/order/:id"
+                element={
+                  <ProtectedRoute>
+                    <OrderPage />
+                  </ProtectedRoute>
+                }
+              ></Route>
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <AdminRoute>
+                    <DashboardPage />
+                  </AdminRoute>
+                }
+              ></Route>
               <Route path="/" element={<HomePage />} />
             </Routes>
           </Container>
