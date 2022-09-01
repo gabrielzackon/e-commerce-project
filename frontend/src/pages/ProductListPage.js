@@ -107,26 +107,7 @@ export default function ProductListPage() {
   }, [page, userInfo, successDelete]);
 
   const createHandler = async () => {
-    if (window.confirm('Are you sure you want to create a new product?')) {
-      try {
-        dispatch({ type: 'CREATE_REQUEST' });
-        const { data } = await axios.post(
-          '/api/products',
-          {},
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
-        );
-        alert('product created successfully');
-        dispatch({ type: 'CREATE_SUCCESS' });
-        navigate(`/admin/product/${data.product._id}`);
-      } catch (err) {
-        alert(getError(error));
-        dispatch({
-          type: 'CREATE_FAIL',
-        });
-      }
-    }
+    navigate('/admin/product/create');
   };
 
   const deleteHandler = async (product) => {

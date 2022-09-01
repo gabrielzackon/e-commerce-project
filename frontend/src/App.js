@@ -28,6 +28,7 @@ import UsersActivityPage from './pages/UsersActivityPage';
 import { CookiesProvider, useCookies } from 'react-cookie';
 import ProductListPage from './pages/ProductListPage';
 import ProductEditPage from './pages/ProductEditPage';
+import CreateProductPage from './pages/CreateProductPage';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -177,6 +178,14 @@ function App() {
                   element={
                     <AdminRoute>
                       <ProductEditPage />
+                    </AdminRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/admin/product/create"
+                  element={
+                    <AdminRoute>
+                      <CreateProductPage />
                     </AdminRoute>
                   }
                 ></Route>
