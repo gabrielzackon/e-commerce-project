@@ -45,6 +45,7 @@ function HomePage() {
         <title>Shirt In A Box</title>
       </Helmet>
       <h1>Featured products</h1>
+      <br></br>
       <div className="products">
         {loading ? (
           <LoadingBox />

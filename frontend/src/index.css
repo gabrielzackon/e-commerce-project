@@ -104,3 +104,11 @@ main {
   width: 12%;
   text-align: center;
 }
+
+.filter {
+  width: 50%;
+}
+
+.searchBox {
+  width: 50%;
+}
