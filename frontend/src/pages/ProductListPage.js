@@ -111,7 +111,7 @@ export default function ProductListPage() {
   };
 
   const deleteHandler = async (product) => {
-    if (window.confirm('Are you sure to delete?')) {
+    if (window.confirm('Are you sure you want to delete?')) {
       try {
         await axios.delete(`/api/products/${product._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },

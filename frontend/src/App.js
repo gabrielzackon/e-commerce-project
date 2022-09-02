@@ -66,7 +66,6 @@ function App() {
     removeCookie('userInfo', { path: '/' });
   };
 
-  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
