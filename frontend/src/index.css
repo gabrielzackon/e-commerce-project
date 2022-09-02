@@ -33,6 +33,13 @@ main {
   max-width: 100%;
 }
 
+.img-small {
+  max-width: 300px;
+  max-height: 300px;
+  justify-content: center;
+  align-items: center;
+}
+
 .img-thumbnail {
   height: 80px;
 }

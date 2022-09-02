@@ -113,7 +113,7 @@ export default function ProductEditPage() {
       alert('Product updated successfully');
       navigate('/admin/products');
     } catch (err) {
-      alert(getError(err));
+      alert('Cannot create item - ' + getError(err));
       dispatch({ type: 'UPDATE_FAIL' });
     }
   };
@@ -174,10 +174,15 @@ export default function ProductEditPage() {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               required
+              pattern="[0-9]+"
+              onInvalid={(e) => {
+                e.target.setCustomValidity('Please use digits only');
+              }}
+              onInput={(e) => e.target.setCustomValidity('')}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="image">
-            <Form.Label>Image File</Form.Label>
+            <Form.Label>Image URL</Form.Label>
             <Form.Control
               value={image}
               onChange={(e) => setImage(e.target.value)}
@@ -212,6 +217,11 @@ export default function ProductEditPage() {
               value={countInStock}
               onChange={(e) => setCountInStock(e.target.value)}
               required
+              pattern="[0-9]+"
+              onInvalid={(e) => {
+                e.target.setCustomValidity('Please use digits only');
+              }}
+              onInput={(e) => e.target.setCustomValidity('')}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="description">

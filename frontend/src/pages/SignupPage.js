@@ -65,6 +65,11 @@ export default function SignupScreen() {
             type="email"
             required
             onChange={(e) => setEmail(e.target.value)}
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+            onInvalid={(e) => {
+              e.target.setCustomValidity('Please enter valid email address');
+            }}
+            onInput={(e) => e.target.setCustomValidity('')}
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="password">

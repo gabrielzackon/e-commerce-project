@@ -16,6 +16,10 @@ import data from './data.js';
 
 const router = express.Router();
 const upload = multer();
+const DUPLICATE_NAME_MESSAGE = 'Product with the same "Name" already exists';
+const DUPLICATE_SLUG_MESSAGE = 'Product with the same "Slug" already exists';
+const DUPLICATE_NAME_AND_SLUG_MESSAGE =
+  'Product with the same "Name" and "Slug" already exists';
 
 // Startup
 router.post(
@@ -147,20 +151,41 @@ router.post(
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
-    const newProduct = new Product({
-      name: req.body.name,
+    const existProductWithSameSlug = await Product.find({
       slug: req.body.slug,
-      image: req.body.image,
-      price: req.body.price,
-      category: req.body.category,
-      brand: req.body.brand,
-      countInStock: req.body.countInStock,
-      rating: 0,
-      numReviews: 0,
-      description: req.body.description,
     });
-    const product = await newProduct.save();
-    res.send({ message: 'Product Created', product });
+    const existProductWithSameName = await Product.find({
+      name: req.body.name,
+    });
+    if (
+      existProductWithSameSlug.length == 0 &&
+      existProductWithSameName.length == 0
+    ) {
+      const newProduct = new Product({
+        name: req.body.name,
+        slug: req.body.slug,
+        image: req.body.image,
+        price: req.body.price,
+        category: req.body.category,
+        brand: req.body.brand,
+        countInStock: req.body.countInStock,
+        rating: 0,
+        numReviews: 0,
+        description: req.body.description,
+      });
+      const product = await newProduct.save();
+      res.send({ message: 'Product Created', product });
+    } else {
+      res.status(409).send({
+        message:
+          existProductWithSameSlug.length > 0 &&
+          existProductWithSameName.length > 0
+            ? DUPLICATE_NAME_AND_SLUG_MESSAGE
+            : existProductWithSameSlug.length > 0
+            ? DUPLICATE_SLUG_MESSAGE
+            : DUPLICATE_NAME_MESSAGE,
+      });
+    }
   })
 );
 
@@ -169,21 +194,48 @@ router.put(
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
-    const productId = req.params.id;
-    const product = await Product.findById(productId);
-    if (product) {
-      product.name = req.body.name;
-      product.slug = req.body.slug;
-      product.price = req.body.price;
-      product.image = req.body.image;
-      product.category = req.body.category;
-      product.brand = req.body.brand;
-      product.countInStock = req.body.countInStock;
-      product.description = req.body.description;
-      await product.save();
-      res.send({ message: 'Product Updated' });
+    let existProductWithSameSlug = await Product.find({
+      slug: req.body.slug,
+    });
+    existProductWithSameSlug = existProductWithSameSlug.filter(
+      (p) => p._id != req.params.id
+    );
+    let existProductWithSameName = await Product.find({
+      name: req.body.name,
+    });
+    existProductWithSameName = existProductWithSameName.filter(
+      (p) => p._id != req.params.id
+    );
+    if (
+      existProductWithSameSlug.length == 0 &&
+      existProductWithSameName.length == 0
+    ) {
+      const productId = req.params.id;
+      const product = await Product.findById(productId);
+      if (product) {
+        product.name = req.body.name;
+        product.slug = req.body.slug;
+        product.price = req.body.price;
+        product.image = req.body.image;
+        product.category = req.body.category;
+        product.brand = req.body.brand;
+        product.countInStock = req.body.countInStock;
+        product.description = req.body.description;
+        await product.save();
+        res.send({ message: 'Product Updated' });
+      } else {
+        res.status(404).send({ message: 'Product Not Found' });
+      }
     } else {
-      res.status(404).send({ message: 'Product Not Found' });
+      res.status(409).send({
+        message:
+          existProductWithSameSlug.length > 0 &&
+          existProductWithSameName.length > 0
+            ? DUPLICATE_NAME_AND_SLUG_MESSAGE
+            : existProductWithSameSlug.length > 0
+            ? DUPLICATE_SLUG_MESSAGE
+            : DUPLICATE_NAME_MESSAGE,
+      });
     }
   })
 );
