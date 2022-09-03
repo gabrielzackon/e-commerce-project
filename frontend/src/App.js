@@ -37,7 +37,7 @@ function App() {
   const reportLogoutActivity = async (name, email, token) => {
     try {
       const { data } = await Axios.post(
-        '/api/logoutActivity/report',
+        '/api/activity/logoutActivity',
         {
           name,
           email,

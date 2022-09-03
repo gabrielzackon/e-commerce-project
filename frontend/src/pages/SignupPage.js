@@ -6,7 +6,8 @@ import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet-async';
 import React, { useContext, useEffect, useState } from 'react';
 import { Store } from '../Store';
-import { getError } from '../utils';
+import { getError, THIRTY_MINS_IN_MS } from '../utils';
+import { useCookies } from 'react-cookie';
 
 export default function SignupScreen() {
   const navigate = useNavigate();
@@ -18,9 +19,31 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [cookies, setCookie] = useCookies(['userInfo']);
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
+
+  const reportLoginActivity = async (name, userData) => {
+    try {
+      const { data } = await Axios.post(
+        '/api/activity/loginActivity',
+        {
+          name,
+          email,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      ctxDispatch({ type: 'USER_REPORT_LOGIN', payload: userData });
+    } catch (err) {
+      alert(getError(err));
+    }
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -34,7 +57,16 @@ export default function SignupScreen() {
         password,
       });
       ctxDispatch({ type: 'USER_LOGIN', payload: data });
+      const expiry = new Date();
+      expiry.setTime(expiry.getTime() + THIRTY_MINS_IN_MS);
+      data['expiry'] = expiry.getTime();
       localStorage.setItem('userInfo', JSON.stringify(data));
+      reportLoginActivity(data.name, data);
+      ctxDispatch({ type: 'SET_USER_CART', payload: [] });
+      setCookie('userInfo', JSON.stringify(data), {
+        path: '/',
+        expires: expiry,
+      });
       navigate(redirect || '/');
     } catch (err) {
       alert(getError(err));

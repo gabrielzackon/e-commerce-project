@@ -91,7 +91,7 @@ export default function ProductEditPage() {
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
       await axios.put(
-        `/api/products/${productId}`,
+        `/api/products/update/${productId}`,
         {
           _id: productId,
           name,

@@ -34,7 +34,6 @@ export default function PlaceOrderPage() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart, userInfo } = state;
-  console.log(state);
 
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
   cart.itemsPrice = round2(
@@ -51,7 +50,7 @@ export default function PlaceOrderPage() {
       const { data } = await Axios.post(
         '/api/orders',
         {
-          orderItems: cart.cartItems,
+          orderItems: cart.checkoutItems,
           shippingAddress: cart.shippingAddress,
           paymentInfo: cart.paymentInfo,
           itemsPrice: cart.itemsPrice,

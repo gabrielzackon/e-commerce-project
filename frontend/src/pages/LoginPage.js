@@ -6,12 +6,12 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
-import { getError } from '../utils';
+import { getError, THIRTY_MINS_IN_MS, TEN_DAYS_IN_MS } from '../utils';
 import { useCookies } from 'react-cookie';
 
 export default function LoginPage() {
-  const THIRTY_MINS_IN_MS = 30 * 60 * 1000;
-  const TEN_DAYS_IN_MS = 10 * 24 * 60 * 60 * 1000;
+  // const THIRTY_MINS_IN_MS = 30 * 60 * 1000;
+  // const TEN_DAYS_IN_MS = 10 * 24 * 60 * 60 * 1000;
   const [cookies, setCookie] = useCookies(['userInfo']);
 
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ export default function LoginPage() {
   const reportLoginActivity = async (name, userData) => {
     try {
       const { data } = await Axios.post(
-        '/api/loginActivity/report',
+        '/api/activity/loginActivity',
         {
           name,
           email,
@@ -88,7 +88,6 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    console.log('a');
     if (cookies['userInfo']) {
       navigate(redirect);
     }
