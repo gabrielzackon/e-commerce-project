@@ -2,14 +2,14 @@ import fetch from 'node-fetch';
 import User from '../models/UserModel.js';
 import bcrypt from 'bcryptjs';
 
-async function testSignup() {
+const testSignup = async () => {
   let random_username = Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, '')
-    .substr(0, 10);
+    .slice(0, 10);
   const bodySignUp = new User({
     name: random_username,
-    email: random_username + '@gmail.com',
+    email: random_username.concat('@gmail.com'),
     password: bcrypt.hashSync('123456'),
   });
   await fetch('http://localhost:5050/api/users/signup', {
@@ -19,12 +19,11 @@ async function testSignup() {
       'Content-Type': 'application/json',
     },
   }).then(async (response) => {
-    console.log(response.status === 200);
+    return response.status === 200;
   });
-}
-testSignup();
+};
 
-async function testLogin() {
+const testLogin = async () => {
   const bodyLogin = {
     name: 'admin',
     email: 'admin@gmail.com',
@@ -37,7 +36,15 @@ async function testLogin() {
       'Content-Type': 'application/json',
     },
   }).then(async (response) => {
-    console.log(response.status === 200);
+    return response.status === 200;
   });
-}
-testLogin();
+};
+
+const userRoutesTest = async () => {
+  return [
+    { testName: 'Login', result: testLogin() },
+    { testName: 'Signup', result: testSignup() },
+  ];
+};
+
+export default userRoutesTest;
