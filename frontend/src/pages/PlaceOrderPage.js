@@ -11,6 +11,7 @@ import { getError } from '../utils';
 import { Store } from '../Store';
 import CheckoutSteps from '../components/CheckoutSteps';
 import LoadingBox from '../components/LoadingBox';
+import { postOrder } from '../persist';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -46,24 +47,8 @@ export default function PlaceOrderPage() {
   const placeOrderHandler = async () => {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
+      const data = await postOrder(cart, userInfo.token);
 
-      const { data } = await Axios.post(
-        '/api/orders',
-        {
-          orderItems: cart.checkoutItems,
-          shippingAddress: cart.shippingAddress,
-          paymentInfo: cart.paymentInfo,
-          itemsPrice: cart.itemsPrice,
-          shippingPrice: cart.shippingPrice,
-          taxPrice: cart.taxPrice,
-          totalPrice: cart.totalPrice,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
       ctxDispatch({ type: 'CART_CLEAR' });
       dispatch({ type: 'CREATE_SUCCESS' });
       localStorage.removeItem('cartItems');

@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useReducer, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
@@ -8,6 +6,7 @@ import { Store } from '../Store';
 import { getError } from '../utils';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
+import { getUsersActivitySummary } from '../persist.js';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -36,11 +35,7 @@ export default function UsersActivityPage() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const { data } = await axios.get(
-          `/api/activity/summary`,
-
-          { headers: { Authorization: `Bearer ${userInfo.token}` } }
-        );
+        const data = await getUsersActivitySummary(userInfo.token);
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (error) {
         dispatch({

@@ -13,6 +13,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError, reportATCActivity } from '../utils';
 import { Store } from '../Store';
+import { getProductsBySlug, getProductsById } from '../persist.js';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -51,7 +52,7 @@ function ProductPage() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await Axios.get(`/api/products/slug/${slug}`);
+        const result = await getProductsBySlug(slug);
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (error) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(error) });
@@ -66,7 +67,7 @@ function ProductPage() {
     navigate('/login?redirect=/cart');
     const existItem = cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await Axios.get(`/api/products/${product._id}`);
+    const data = await getProductsById(product._id);
     if (data.countInStock < quantity) {
       window.alert('Product out of stock');
       return;

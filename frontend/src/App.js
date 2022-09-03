@@ -29,6 +29,7 @@ import { CookiesProvider, useCookies } from 'react-cookie';
 import ProductListPage from './pages/ProductListPage';
 import ProductEditPage from './pages/ProductEditPage';
 import CreateProductPage from './pages/CreateProductPage';
+import { getProductsCategories, reportLogoutActivityToDB } from './persist.js';
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -36,18 +37,7 @@ function App() {
   const [cookies, setCookie, removeCookie] = useCookies(['userInfo']);
   const reportLogoutActivity = async (name, email, token) => {
     try {
-      const { data } = await Axios.post(
-        '/api/activity/logoutActivity',
-        {
-          name,
-          email,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const data = await reportLogoutActivityToDB(name, email, token);
       ctxDispatch({ type: 'USER_REPORT_LOGOUT' });
     } catch (err) {
       alert(getError(err));
@@ -71,7 +61,7 @@ function App() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await Axios.get(`/api/products/categories`);
+        const data = await getProductsCategories();
         setCategories(data);
       } catch (err) {
         alert(getError(err));

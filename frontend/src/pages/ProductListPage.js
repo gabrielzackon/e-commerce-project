@@ -8,6 +8,7 @@ import { Store } from '../Store';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { getError } from '../utils';
+import { deleteProduct, getProductsForAdminPage } from '../persist.js';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -91,12 +92,7 @@ export default function ProductListPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get(
-          `/api/products/summary?page=${page} `,
-          {
-            headers: { Authorization: `Bearer ${userInfo.token}` },
-          }
-        );
+        const data = await getProductsForAdminPage(page, userInfo.token);
 
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {}
@@ -116,9 +112,7 @@ export default function ProductListPage() {
   const deleteHandler = async (product) => {
     if (window.confirm('Are you sure you want to delete?')) {
       try {
-        await axios.delete(`/api/products/delete/${product._id}`, {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        });
+        await deleteProduct(product._id, userInfo.token);
         alert('product deleted successfully');
         dispatch({ type: 'DELETE_SUCCESS' });
       } catch (err) {

@@ -9,6 +9,7 @@ import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Button from 'react-bootstrap/Button';
+import { createProduct, uploadProductImage } from '../persist.js';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -64,22 +65,18 @@ export default function CreateProductPage() {
     e.preventDefault();
     try {
       dispatch({ type: 'CREATE_REQUEST' });
-      await axios.post(
-        `/api/products/create`,
-        {
-          name,
-          slug,
-          price,
-          image,
-          category,
-          brand,
-          countInStock,
-          description,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
+      await createProduct(
+        name,
+        slug,
+        price,
+        image,
+        category,
+        brand,
+        countInStock,
+        description,
+        userInfo.token
       );
+
       dispatch({
         type: 'CREATE_SUCCESS',
       });
@@ -96,16 +93,7 @@ export default function CreateProductPage() {
     bodyFormData.append('file', file);
     try {
       dispatch({ type: 'UPLOAD_REQUEST' });
-      const { data } = await axios.post(
-        '/api/products/uploadImage',
-        bodyFormData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
+      const data = await uploadProductImage(bodyFormData, userInfo.token);
       dispatch({ type: 'UPLOAD_SUCCESS' });
 
       alert('Image uploaded successfully');

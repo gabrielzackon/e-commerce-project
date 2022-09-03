@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import React, { useContext, useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
@@ -8,10 +7,13 @@ import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
 import { getError, THIRTY_MINS_IN_MS, TEN_DAYS_IN_MS } from '../utils';
 import { useCookies } from 'react-cookie';
+import {
+  userLogin,
+  getCartByEmail,
+  reportLoginActivityToDB,
+} from '../persist.js';
 
 export default function LoginPage() {
-  // const THIRTY_MINS_IN_MS = 30 * 60 * 1000;
-  // const TEN_DAYS_IN_MS = 10 * 24 * 60 * 60 * 1000;
   const [cookies, setCookie] = useCookies(['userInfo']);
 
   const navigate = useNavigate();
@@ -28,10 +30,7 @@ export default function LoginPage() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await Axios.post('/api/users/login', {
-        email,
-        password,
-      });
+      const data = await userLogin(email, password);
 
       ctxDispatch({
         type: 'USER_LOGIN',
@@ -58,9 +57,7 @@ export default function LoginPage() {
 
   const setUserCart = async (email, token) => {
     try {
-      const cartData = await Axios.get(`/api/carts/${email}`, {
-        headers: { authorization: `Bearer ${token}` },
-      });
+      const cartData = await getCartByEmail(email, token);
       ctxDispatch({ type: 'SET_USER_CART', payload: cartData.data });
     } catch (err) {
       alert(getError(err));
@@ -69,18 +66,7 @@ export default function LoginPage() {
 
   const reportLoginActivity = async (name, userData) => {
     try {
-      const { data } = await Axios.post(
-        '/api/activity/loginActivity',
-        {
-          name,
-          email,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
+      const data = await reportLoginActivityToDB(name, email, userData.token);
       ctxDispatch({ type: 'USER_REPORT_LOGIN', payload: userData });
     } catch (err) {
       alert(getError(err));

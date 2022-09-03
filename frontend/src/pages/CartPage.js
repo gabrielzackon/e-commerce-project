@@ -8,8 +8,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { reportATCActivity } from '../utils';
+import { getProductsById } from '../persist.js';
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -19,8 +19,7 @@ export default function CartPage() {
   } = state;
 
   const updateQuantityHandler = async (cartItem, quantity, increaseFlag) => {
-    const { data } = await axios.get(`/api/products/${cartItem._id}`);
-
+    const data = await getProductsById(cartItem._id);
     if (data.countInStock < quantity) {
       window.alert('Product out of stock');
       return;

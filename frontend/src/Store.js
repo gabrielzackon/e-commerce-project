@@ -1,6 +1,7 @@
 import React, { createContext, useReducer } from 'react';
 import Axios from 'axios';
 import { getError } from './utils';
+import { postCart } from './persist.js';
 export const Store = createContext();
 
 const initialState = {
@@ -24,18 +25,7 @@ const initialState = {
 
 const updateCartInDB = async (email, cartItems, token) => {
   try {
-    const { data } = await Axios.post(
-      '/api/carts',
-      {
-        email: email,
-        cartItems: cartItems,
-      },
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const data = await postCart(email, cartItems, token);
   } catch (err) {
     alert(getError(err));
   }

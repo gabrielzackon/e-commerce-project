@@ -9,6 +9,7 @@ import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import Button from 'react-bootstrap/Button';
+import { updateProduct, getProductsById } from '../persist';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -66,7 +67,7 @@ export default function ProductEditPage() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/products/${productId}`);
+        const data = await getProductsById(productId);
         setName(data.name);
         setSlug(data.slug);
         setPrice(data.price);
@@ -90,23 +91,19 @@ export default function ProductEditPage() {
     e.preventDefault();
     try {
       dispatch({ type: 'UPDATE_REQUEST' });
-      await axios.put(
-        `/api/products/update/${productId}`,
-        {
-          _id: productId,
-          name,
-          slug,
-          price,
-          image,
-          category,
-          brand,
-          countInStock,
-          description,
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
-        }
+      await updateProduct(
+        productId,
+        name,
+        slug,
+        price,
+        image,
+        category,
+        brand,
+        countInStock,
+        description,
+        userInfo.token
       );
+
       dispatch({
         type: 'UPDATE_SUCCESS',
       });

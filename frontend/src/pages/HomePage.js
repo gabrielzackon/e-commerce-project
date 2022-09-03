@@ -7,6 +7,7 @@ import Product from '../components/Product';
 import { Helmet } from 'react-helmet-async';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { getProducts } from '../persist.js';
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
@@ -31,7 +32,7 @@ function HomePage() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const products = await axios.get('/api/products');
+        const products = await getProducts();
         dispatch({ type: 'FETCH_SUCCESS', payload: products.data });
       } catch (error) {
         dispatch({ type: 'FETCH_FAIL', payload: error.message });

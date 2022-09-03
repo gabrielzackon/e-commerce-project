@@ -8,6 +8,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Store } from '../Store';
 import { getError, THIRTY_MINS_IN_MS } from '../utils';
 import { useCookies } from 'react-cookie';
+import { userSignup, reportLoginActivityToDB } from '../persist.js';
 
 export default function SignupScreen() {
   const navigate = useNavigate();
@@ -26,18 +27,7 @@ export default function SignupScreen() {
 
   const reportLoginActivity = async (name, userData) => {
     try {
-      const { data } = await Axios.post(
-        '/api/activity/loginActivity',
-        {
-          name,
-          email,
-        },
-        {
-          headers: {
-            authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
+      const data = await reportLoginActivityToDB(name, email, userData.token);
       ctxDispatch({ type: 'USER_REPORT_LOGIN', payload: userData });
     } catch (err) {
       alert(getError(err));
@@ -51,11 +41,7 @@ export default function SignupScreen() {
       return;
     }
     try {
-      const { data } = await Axios.post('/api/users/signup', {
-        name,
-        email,
-        password,
-      });
+      const data = await userSignup(name, email, password);
       ctxDispatch({ type: 'USER_LOGIN', payload: data });
       const expiry = new Date();
       expiry.setTime(expiry.getTime() + THIRTY_MINS_IN_MS);

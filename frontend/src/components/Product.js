@@ -6,6 +6,7 @@ import Rating from './Rating';
 import axios from 'axios';
 import { Store } from '../Store';
 import { reportATCActivity } from '../utils';
+import { getProductsById } from '../persist.js';
 
 function Product(props) {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function Product(props) {
     } else {
       const existItem = cartItems.find((x) => x._id === item._id);
       const quantity = existItem ? existItem.quantity + 1 : 1;
-      const { data } = await axios.get(`/api/products/${item._id}`);
+      const data = await getProductsById(item._id);
 
       if (data.countInStock < quantity) {
         window.alert('Product out of stock');
