@@ -8,11 +8,14 @@ import LogoutActivity from '../models/LogoutActivityModel.js ';
 import LoginActivity from '../models/LoginActivityModel.js ';
 import AddToCartActivity from '../models/AddToCartActivityModel.js ';
 import data from '../data.js';
+import { isAdmin, isAuth } from '../utils.js';
 
 const startupRouter = express.Router();
 
 startupRouter.post(
   '',
+  isAdmin,
+  isAuth,
   expressAsyncHandler(async (req, res) => {
     await Product.deleteMany({});
     await User.deleteMany({});

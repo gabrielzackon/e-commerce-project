@@ -1,9 +1,5 @@
 import Axios from 'axios';
 
-// Startup
-// TODO:implement
-export const startupAppDataInDB = () => {};
-
 // Login Activity
 
 export const reportLoginActivityToDB = async (name, email, token) => {
@@ -68,8 +64,6 @@ export const getUsersActivitySummary = async (token) => {
 };
 
 // Login
-
-// TODO:implement
 export const userLogin = async (email, password) => {
   const { data } = await Axios.post('/api/users/login', {
     email,
