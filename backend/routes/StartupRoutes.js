@@ -25,7 +25,7 @@ startupRouter.post(
     const users = await User.insertMany(data.users);
     res.status(201).send({
       message: 'Set up DB with users and products Successfully',
-      payloda: { products: products, users: users },
+      payload: { products: products, users: users },
     });
   })
 );
