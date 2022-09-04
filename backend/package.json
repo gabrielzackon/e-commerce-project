@@ -5,12 +5,21 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "nodemon test.js",
+    "test": "jest",
     "start": "nodemon server.js"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_moudles"
+    ]
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.31.0",
     "dotenv": "^16.0.1",
@@ -19,10 +28,13 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.0",
     "multer": "^1.4.5-lts.1",
-    "node-fetch": "^3.2.10",
     "streamifier": "^0.1.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.18.10",
+    "babel-jest": "^29.0.2",
+    "jest": "^29.0.2",
+    "node-fetch": "^2.6.7",
     "nodemon": "^2.0.19"
   }
 }

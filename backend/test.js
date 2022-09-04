@@ -1,23 +1,49 @@
-import { userRoutesTest, startupRoutesTest } from './tests/UserRoutesTests.js';
-const TEST_KEY = 'Test';
-const TESTS_KEY = 'Tests:\n';
-const PASSED = 'PASSED';
-const FAILED = 'FAILED';
-const SEP = '---------------------------------------------------------';
-let result;
+import fetch from 'node-fetch';
 
-// UserRoutesTests;
-const userRoutesTestResponse = await userRoutesTest();
-console.log(`${SEP} \nUserRoutes ${TESTS_KEY}`);
-userRoutesTestResponse.map((response) => {
-  result = response.result ? PASSED : FAILED;
-  console.log(`${TEST_KEY} ${response.testName} - ${result}`);
+test('Test Signup', async () => {
+  const bodyLogin = {
+    name: 'admin',
+    email: 'admin@gmail.com',
+    password: '123456',
+  };
+  await fetch('http://localhost:5050/api/users/login', {
+    method: 'POST',
+    body: JSON.stringify(bodyLogin),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(async (response) => {
+    expect(response.status).toBe(200);
+  });
 });
 
-// // StartupRoutesTests
-// const startupRoutesTestResponse = await startupRoutesTest();
-// console.log(`${SEP} \nStartupRoutes ${TESTS_KEY}`);
-// startupRoutesTestResponse.map((response) => {
-//   result = response.result ? PASSED : FAILED;
-//   console.log(`${TEST_KEY} ${response.testName} - ${result}`);
+test('Test Login', async () => {
+  const bodyLogin = {
+    name: 'admin',
+    email: 'admin@gmail.com',
+    password: '123456',
+  };
+  await fetch('http://localhost:5050/api/users/login', {
+    method: 'POST',
+    body: JSON.stringify(bodyLogin),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(async (response) => {
+    expect(response.status).toBe(200);
+  });
+});
+
+// test('Test Startup', async () => {
+//   await fetch('http://localhost:5050/api/startup', {
+//     method: 'POST',
+//     headers: {
+//       authorization: `Bearer ${user.token}`,
+//     },
+//   }).then(async (response) => {
+//     const res = await response.json();
+//     const status = response.status;
+//     expect(res.message).toBe('Set up DB with users and products Successfully');
+//     expect(status).toBe(201);
+//   });
 // });
