@@ -1,4 +1,7 @@
 import fetch from 'node-fetch';
+import User from '../models/UserModel.js';
+import Product from '../models/ProductModel.js';
+import bcrypt from 'bcryptjs';
 
 async function testProductsCreate() {
   const testProduct = new Product({
