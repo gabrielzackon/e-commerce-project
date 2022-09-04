@@ -25,7 +25,7 @@ function reducer(state, action) {
       return state;
   }
 }
-export default function OrderScreen() {
+export default function OrderPage() {
   const { state } = useContext(Store);
   const { userInfo } = state;
 
