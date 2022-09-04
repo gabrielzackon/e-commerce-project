@@ -26,6 +26,7 @@ import ProtectedRoute from './components/ProtectedRoute.js';
 import AdminRoute from './components/AdminRoute';
 import UsersActivityPage from './pages/UsersActivityPage';
 import { CookiesProvider, useCookies } from 'react-cookie';
+import OrderHistoryPage from './pages/OrderHistoryPage';
 import ProductListPage from './pages/ProductListPage';
 import ProductEditPage from './pages/ProductEditPage';
 import CreateProductPage from './pages/CreateProductPage';
@@ -75,12 +76,13 @@ function App() {
       <BrowserRouter>
         <div className="d-flex flex-column site-container">
           <header>
-            <Navbar bg="dark" variant="dark">
+            <Navbar bg="dark" variant="dark" expand="lg">
               <Container>
                 <LinkContainer to="/">
                   <Navbar.Brand>Shirt In A Box</Navbar.Brand>
                 </LinkContainer>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" />
                 <SearchBox />
                 <Nav className="me-auto  w-100  justify-content-end">
                   <Link to="/cart" className="nav-link">
@@ -91,6 +93,25 @@ function App() {
                       </Badge>
                     )}
                   </Link>
+                  {userInfo ? (
+                    <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                      <LinkContainer to="/orderhistory">
+                        <NavDropdown.Item>Order History</NavDropdown.Item>
+                      </LinkContainer>
+                      <NavDropdown.Divider />
+                      <Link
+                        className="dropdown-item"
+                        to="#signout"
+                        onClick={logoutHandler}
+                      >
+                        Sign Out
+                      </Link>
+                    </NavDropdown>
+                  ) : (
+                    <Link className="nav-link" to="/login">
+                      Sign In
+                    </Link>
+                  )}
                   {userInfo && userInfo.isAdmin ? (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/useractivity">
@@ -146,6 +167,10 @@ function App() {
                       <OrderPage />
                     </ProtectedRoute>
                   }
+                ></Route>
+                <Route
+                  path="/orderhistory"
+                  element={<OrderHistoryPage />}
                 ></Route>
                 <Route
                   path="/admin/useractivity"

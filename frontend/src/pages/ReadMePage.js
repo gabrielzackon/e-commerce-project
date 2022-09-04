@@ -40,6 +40,13 @@ export default function ReadMePage() {
               <strong>Review Order Page</strong> - After placing an order, you
               will get to the review order page.
             </span>
+            <br></br>
+            <span class="readme">
+              <strong>Order History Page</strong> - Evert user has his order
+              history summed, enter it by pressing on the user name that is
+              located at the right of the top navbar, and the pressing on order
+              history.
+            </span>
           </h1>
           <br></br>
           <h1 id="question" class="readme text">
@@ -60,13 +67,22 @@ export default function ReadMePage() {
           <h1 id="question" class="readme text">
             What did I do?
             <br></br>
-            <span class="readme">-Fill- </span>
+            <span class="readme">
+              We both built the infrastructure of the code together, after that
+              I focused on implementing the parts that regard to the users and
+              the cart, together with the home page, and we both worked together
+              on the admin pages{' '}
+            </span>
           </h1>
           <br></br>
           <h1 id="question" class="readme text">
             What did my partner do?
             <br></br>
-            <span class="readme">-Fill-</span>
+            <span class="readme">
+              We both built the infrastructure of the code together, after that
+              he focused on implementing the parts that regard to the products
+              and the orders, and we both worked together on the admin pages
+            </span>
           </h1>
           <br></br>
           <h1 id="question" class="readme text">
