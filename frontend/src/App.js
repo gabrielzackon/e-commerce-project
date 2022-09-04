@@ -93,25 +93,6 @@ function App() {
                       </Badge>
                     )}
                   </Link>
-                  {userInfo ? (
-                    <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                      <LinkContainer to="/orderhistory">
-                        <NavDropdown.Item>Order History</NavDropdown.Item>
-                      </LinkContainer>
-                      <NavDropdown.Divider />
-                      <Link
-                        className="dropdown-item"
-                        to="#signout"
-                        onClick={logoutHandler}
-                      >
-                        Sign Out
-                      </Link>
-                    </NavDropdown>
-                  ) : (
-                    <Link className="nav-link" to="/login">
-                      Sign In
-                    </Link>
-                  )}
                   {userInfo && userInfo.isAdmin ? (
                     <NavDropdown title="Admin" id="admin-nav-dropdown">
                       <LinkContainer to="/admin/useractivity">
@@ -119,6 +100,23 @@ function App() {
                       </LinkContainer>
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/orderhistory">
+                        <NavDropdown.Item>Order History</NavDropdown.Item>
+                      </LinkContainer>
+                      <NavDropdown.Divider />
+                      <Link
+                        className="dropdown-item"
+                        to="/"
+                        onClick={logoutHandler}
+                      >
+                        Log Out
+                      </Link>
+                    </NavDropdown>
+                  ) : userInfo ? (
+                    <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                      <LinkContainer to="/orderhistory">
+                        <NavDropdown.Item>Order History</NavDropdown.Item>
                       </LinkContainer>
                       <NavDropdown.Divider />
                       <Link
