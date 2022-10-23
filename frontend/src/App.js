@@ -101,9 +101,6 @@ function App() {
                       <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/orderhistory">
-                        <NavDropdown.Item>Order History</NavDropdown.Item>
-                      </LinkContainer>
                       <NavDropdown.Divider />
                       <Link
                         className="dropdown-item"

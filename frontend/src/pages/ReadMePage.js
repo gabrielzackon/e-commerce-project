@@ -53,25 +53,25 @@ export default function ReadMePage() {
             What was hard to do?
             <br></br>
             <span class="readme">
-              Implement both backened and frontened of the app. Work with new
-              and unfamiliar languages and frameworks.{' '}
+              Working with new lanuages and frameworks, linking the backend and
+              frontend every step of the way.{' '}
             </span>
           </h1>
           <br></br>
           <h1 id="question" class="readme text">
             Who is your partner?
             <br></br>
-            <span class="readme">Gabriel Zackon - 204879829 </span>
+            <span class="readme"> Or Zachchinsky - 308557883 </span>
           </h1>
           <br></br>
           <h1 id="question" class="readme text">
             What did I do?
             <br></br>
             <span class="readme">
-              We both built the infrastructure of the code together, after that
-              I focused on implementing the parts that regard to the users and
-              the cart, together with the home page, and we both worked together
-              on the admin pages{' '}
+              Together with my partner we built the infrastructure of the code,
+              then I focused on implementing the parts that regard to the
+              products and the orders, then we worked together on the admin
+              page.{' '}
             </span>
           </h1>
           <br></br>
@@ -79,9 +79,10 @@ export default function ReadMePage() {
             What did my partner do?
             <br></br>
             <span class="readme">
-              We both built the infrastructure of the code together, after that
-              he focused on implementing the parts that regard to the products
-              and the orders, and we both worked together on the admin pages
+              Together with my partner we built the infrastructure of the code,
+              then he focused on implementing the parts that regard to the
+              users, the home page and the cart, then we worked together on the
+              admin page.{' '}
             </span>
           </h1>
           <br></br>
